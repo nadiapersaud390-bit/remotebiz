@@ -3,235 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Live Performance Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --cyan: #45f3ff;
-            --white: #ffffff;
-            --border-grey: #444;
-        }
+        :root { --bg: #000; --cyan: #45f3ff; --card: #1c1f26; --text: #fff; }
+        body { background: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .wrapper { width: 100%; max-width: 1000px; border: 1px solid #333; padding: 25px; margin-bottom: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 3rem; margin: 0; text-shadow: 0 0 10px rgba(69,243,255,0.5); }
+        .headset { width: 80px; filter: hue-rotate(180deg); }
+        
+        /* Dashboard Layout */
+        .dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+        .levels-flex { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .circle { border: 2px solid var(--cyan); border-radius: 50%; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 0.6rem; box-shadow: 0 0 10px rgba(69,243,255,0.3); }
+        
+        /* Data Rows */
+        .list { display: flex; flex-direction: column; gap: 8px; }
+        .item { background: var(--card); padding: 12px 15px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
+        .badge { background: linear-gradient(to right, #f80, #f40); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .score { color: var(--cyan); font-weight: bold; font-size: 1.2rem; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--white);
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1100px;
-            border: 1px solid var(--border-grey);
-            padding: 25px;
-            position: relative;
-            margin-bottom: 40px;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            color: var(--cyan);
-            font-size: 3.5rem;
-            margin: 0;
-            text-shadow: 0 0 10px rgba(69, 243, 255, 0.5);
-        }
-
-        .headset-icon {
-            width: 90px;
-            height: auto;
-        }
-
-        /* Levels Circles */
-        .dashboard-content {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-        }
-
-        .levels-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .level-circle {
-            border: 3px solid var(--cyan);
-            border-radius: 50%;
-            width: 110px;
-            height: 110px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
-        }
-
-        .level-circle span { font-size: 0.7rem; font-weight: bold; }
-        .level-circle strong { font-size: 0.9rem; margin-top: 5px; }
-
-        /* Rows */
-        .name-list { display: flex; flex-direction: column; gap: 12px; }
-        .list-item {
-            background: #1c1f26;
-            padding: 15px 20px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        .completed-tag {
-            background: linear-gradient(135deg, #ff8c00, #ff4500);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
-        }
-
-        .score-val { color: var(--cyan); font-weight: bold; font-size: 1.4rem; }
-
-        .rank-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 100%;
-        }
-
-        h2.update-title {
-            text-align: center;
-            border-bottom: 2px solid var(--cyan);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-        }
-
-        blockquote {
-            font-style: italic;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-            margin-top: 30px;
-            text-align: center;
-            color: #888;
-        }
+        .rank-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .col h2 { text-align: center; border-bottom: 1px solid var(--cyan); padding-bottom: 5px; font-size: 1.1rem; }
+        .quote { margin-top: 20px; font-style: italic; color: #777; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-section">
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg);">
+    <div class="wrapper">
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset">
             <h1>Level Up Dashboard!</h1>
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset" style="transform: scaleX(-1);">
         </div>
-
-        <div class="dashboard-content">
-            <div class="levels-grid">
-                <div class="level-circle"><span>Level 1: Rookie</span><strong>Leads 1-3</strong></div>
-                <div class="level-circle"><span>Level 2: Pro</span><strong>Leads 4-6</strong></div>
-                <div class="level-circle"><span>Level 3: Elite</span><strong>Leads 7-10</strong></div>
-                <div class="level-circle"><span>Level 4: Master</span><strong>Leads 11-15</strong></div>
-                <div class="level-circle"><span>Level 5: Conqueror</span><strong>Leads 20+</strong></div>
+        <div class="dashboard-grid">
+            <div class="levels-flex">
+                <div class="circle">Level 1: Rookie<br><strong>1-3</strong></div>
+                <div class="circle">Level 2: Pro<br><strong>4-6</strong></div>
+                <div class="circle">Level 3: Elite<br><strong>7-10</strong></div>
+                <div class="circle">Level 4: Master<br><strong>11-15</strong></div>
+                <div class="circle">Level 5: Conqueror<br><strong>20+</strong></div>
             </div>
-
-            <div class="name-list" id="level-up-list">
-                </div>
+            <div class="list" id="level-rows"></div>
         </div>
-        <blockquote>"Opportunities don't happen. You create them." — Chris Grosser</blockquote>
+        <div class="quote">"Opportunities don't happen. You create them." — Chris Grosser</div>
     </div>
 
-    <div class="container">
-        <div class="header-section">
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg);">
+    <div class="wrapper">
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset">
             <h1>General Rank of Performance</h1>
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset" style="transform: scaleX(-1);">
         </div>
-
-        <div class="rank-grid">
-            <div class="update-col">
-                <h2 class="update-title">2PM Update</h2>
-                <div class="name-list" id="rank-2pm"></div>
-            </div>
-            <div class="update-col">
-                <h2 class="update-title">5PM Update</h2>
-                <div class="name-list" id="rank-5pm"></div>
-            </div>
-            <div class="update-col">
-                <h2 class="update-title">8PM Update</h2>
-                <div class="name-list" id="rank-8pm"></div>
-            </div>
+        <div class="rank-columns">
+            <div class="col"><h2>2PM Update</h2><div class="list" id="rank-rows"></div></div>
+            <div class="col"><h2>5PM Update</h2><div class="list"><div class="item"></div><div class="item"></div></div></div>
+            <div class="col"><h2>8PM Update</h2><div class="list"><div class="item"></div><div class="item"></div></div></div>
         </div>
     </div>
 
     <script>
-        // Your specific CSV link
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
 
-        async function fetchData() {
+        async function refresh() {
             try {
-                const response = await fetch(csvUrl);
-                const data = await response.text();
+                // The query string at the end forces Google to provide the freshest data
+                const res = await fetch(`${url}&t=${new Date().getTime()}`);
+                const text = await res.text();
+                const rows = text.split('\n').slice(1);
                 
-                // Parse CSV rows
-                const rows = data.split('\n').map(row => row.split(','));
-                const levelList = document.getElementById('level-up-list');
-                const rankList = document.getElementById('rank-2pm');
-                
-                levelList.innerHTML = '';
-                rankList.innerHTML = '';
+                let lvHtml = '';
+                let rkHtml = '';
 
-                // Skip header row
-                for (let i = 1; i < rows.length; i++) {
-                    const name = rows[i][0]?.trim();
-                    const leads = parseInt(rows[i][1]) || 0;
+                rows.forEach(r => {
+                    const c = r.split(',');
+                    if(c.length < 2) return;
+                    const name = c[0].trim(), leads = parseInt(c[1]) || 0;
 
-                    if (!name) continue;
-
-                    // Level Up Logic based on your dashboard images
-                    let badge = "";
-                    if (leads >= 1) badge = `<span class="completed-tag">LEVEL 1 Completed</span>`;
+                    let b = '';
+                    if(leads >= 20) b = 'LEVEL 5';
+                    else if(leads >= 11) b = 'LEVEL 4';
+                    else if(leads >= 7) b = 'LEVEL 3';
+                    else if(leads >= 4) b = 'LEVEL 2';
+                    else if(leads >= 1) b = 'LEVEL 1';
                     
-                    // Add to Top Dashboard
-                    levelList.innerHTML += `
-                        <div class="list-item">
-                            <span>${name}</span>
-                            ${badge}
-                        </div>`;
+                    const badgeHtml = b ? `<span class="badge">${b} Completed</span>` : '';
+                    lvHtml += `<div class="item"><span>${name}</span>${badgeHtml}</div>`;
+                    rkHtml += `<div class="item"><span>${name}</span><span class="score">${leads}</span></div>`;
+                });
 
-                    // Add to Rank Dashboard
-                    rankList.innerHTML += `
-                        <div class="list-item">
-                            <span>${name}</span>
-                            <span class="score-val">${leads}</span>
-                        </div>`;
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+                document.getElementById('level-rows').innerHTML = lvHtml;
+                document.getElementById('rank-rows').innerHTML = rkHtml;
+            } catch (e) { console.error(e); }
         }
 
-        // Run on load and every 60 seconds
-        fetchData();
-        setInterval(fetchData, 60000);
+        refresh();
+        setInterval(refresh, 10000); // Checks for updates every 10 seconds
     </script>
 </body>
 </html>
