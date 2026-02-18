@@ -17,12 +17,11 @@
         
         .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         
-        /* UPDATED CIRCLE: Larger Icons & Centered Layout */
         .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         .circle { 
             border: 3px solid var(--cyan); 
             border-radius: 50%; 
-            width: 135px; /* Slightly bigger circle */
+            width: 135px; 
             height: 135px; 
             display: flex; 
             flex-direction: column; 
@@ -35,31 +34,28 @@
             position: relative;
             background-repeat: no-repeat;
             background-position: center center; 
-            background-size: 55px; /* Icon is now bigger */
+            background-size: 55px; 
         }
         .circle span { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #fff; }
         .circle strong { font-size: 1rem; color: var(--cyan); }
         
-        /* Level Icon Backgrounds */
         .lvl-1 { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
         .lvl-2 { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
         .lvl-3 { background-image: url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
         .lvl-4 { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
         .lvl-5 { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
 
-        /* AGENT LIST STYLING */
         .list { display: flex; flex-direction: column; gap: 12px; }
         .item { background: var(--card); padding: 15px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; border-bottom: 1px solid #333; }
         
-        /* ORANGE HIGHLIGHTED BADGE */
         .badge-box { 
             display: flex; 
             align-items: center; 
             gap: 10px; 
-            background: rgba(255, 140, 0, 0.15); /* Soft orange glow */
+            background: rgba(255, 140, 0, 0.15); 
             padding: 6px 14px; 
             border-radius: 5px; 
-            border: 1px solid var(--orange); /* Solid orange border */
+            border: 1px solid var(--orange); 
             box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
         }
         .level-icon { width: 32px; height: 32px; object-fit: contain; }
@@ -115,37 +111,46 @@
                 const data = await res.text();
                 const rows = data.split('\n').map(r => r.split(','));
                 
-                // Quote from Cell A8
                 if (rows[7] && rows[7][0]) document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
 
                 const agentRows = rows.slice(1, 7); 
-                let lvH = '', c2H = '', c5H = '', c8H = '';
-
-                agentRows.forEach(cols => {
-                    const name = cols[0]?.trim();
-                    if (!name) return;
-
+                
+                // DATA PROCESSING
+                let agents = agentRows.map(cols => {
                     const v2 = parseInt(cols[1]) || 0;
                     const v5 = parseInt(cols[2]) || 0;
                     const v8 = parseInt(cols[3]) || 0;
-                    const max = Math.max(v2, v5, v8);
+                    return {
+                        name: cols[0]?.trim(),
+                        v2, v5, v8,
+                        max: Math.max(v2, v5, v8)
+                    };
+                }).filter(a => a.name);
 
+                // SORTING: Level Up Dashboard (Highest Max Leads Top)
+                const sortedAgents = [...agents].sort((a, b) => b.max - a.max);
+
+                let lvH = '', c2H = '', c5H = '', c8H = '';
+
+                // Build Level Up List (Sorted)
+                sortedAgents.forEach(a => {
                     let badgeHtml = '';
-                    if(max >= 1) {
+                    if(a.max >= 1) {
                         let iconUrl = 'https://i.postimg.cc/pTPgJVNS/Shield.png';
                         let lvName = 'LEVEL 1';
-                        if(max >= 4) { lvName = 'LEVEL 2'; iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; }
-                        if(max >= 7) { lvName = 'LEVEL 3'; iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; }
-                        if(max >= 11) { lvName = 'LEVEL 4'; iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; }
-                        if(max >= 20) { lvName = 'LEVEL 5'; iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; }
+                        if(a.max >= 4) { lvName = 'LEVEL 2'; iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; }
+                        if(a.max >= 7) { lvName = 'LEVEL 3'; iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; }
+                        if(a.max >= 11) { lvName = 'LEVEL 4'; iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; }
+                        if(a.max >= 20) { lvName = 'LEVEL 5'; iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; }
                         badgeHtml = `<div class="badge-box"><img src="${iconUrl}" class="level-icon"><span class="badge-text">${lvName} Completed</span></div>`;
                     }
-
-                    lvH += `<div class="item"><span>${name}</span>${badgeHtml}</div>`;
-                    c2H += `<div class="item"><span>${name}</span><span class="score">${v2 || ''}</span></div>`;
-                    c5H += `<div class="item"><span>${name}</span><span class="score">${v5 || ''}</span></div>`;
-                    c8H += `<div class="item"><span>${name}</span><span class="score">${v8 || ''}</span></div>`;
+                    lvH += `<div class="item"><span>${a.name}</span>${badgeHtml}</div>`;
                 });
+
+                // Build Time Columns (Sorted by specific time)
+                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span>${a.name}</span><span class="score">${a.v2 || ''}</span></div>`);
+                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span>${a.name}</span><span class="score">${a.v5 || ''}</span></div>`);
+                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span>${a.name}</span><span class="score">${a.v8 || ''}</span></div>`);
 
                 document.getElementById('level-list').innerHTML = lvH;
                 document.getElementById('col-2pm').innerHTML = c2H;
