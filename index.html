@@ -3,54 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Sales Dashboard</title>
+    <title>Live Sales Performance Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --cyan: #45f3ff; --card: #1c1f26; --text: #fff; }
         body { background: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
-        .container { width: 95%; max-width: 1100px; border: 1px solid #444; padding: 30px; margin-bottom: 40px; background: rgba(5, 5, 5, 0.9); }
+        .container { width: 95%; max-width: 1100px; border: 1px solid #444; padding: 30px; margin-bottom: 40px; background: rgba(5, 5, 5, 0.9); position: relative; }
+        
+        /* Header & Icons */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 3rem; margin: 0; font-style: italic; }
-        .headset { width: 100px; filter: drop-shadow(0 0 8px var(--cyan)); }
+        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; font-style: italic; }
+        .headset-icon { width: 80px; height: 80px; filter: drop-shadow(0 0 8px var(--cyan)); }
+        
+        /* Level Dashboard Layout */
         .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         .circle { border: 3px solid var(--cyan); border-radius: 50%; width: 110px; height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 0.7rem; box-shadow: 0 0 15px rgba(69,243,255,0.4); }
         .circle strong { font-size: 0.9rem; margin-top: 5px; }
+
+        /* Dynamic Lists */
         .list { display: flex; flex-direction: column; gap: 12px; }
-        .item { background: var(--card); padding: 15px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; min-height: 30px; border-bottom: 1px solid #333; }
-        .badge { background: linear-gradient(135deg, #ff8c00, #ff4500); color: #fff; padding: 6px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
+        .item { background: var(--card); padding: 15px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; min-height: 35px; border-bottom: 1px solid #333; }
+        .badge { background: linear-gradient(135deg, #ff8c00, #ff4500); color: #fff; padding: 6px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; border: 1px solid #fff; }
         .score { color: var(--cyan); font-weight: bold; font-size: 1.8rem; text-shadow: 0 0 10px var(--cyan); }
+
+        /* Performance Grid */
         .rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
         .col h2 { text-align: center; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; font-size: 1.5rem; }
-        .quote { margin-top: 40px; font-style: italic; color: #888; border-top: 1px solid #333; padding-top: 20px; }
+        .quote { margin-top: 40px; font-style: italic; color: #888; border-top: 1px solid #333; padding-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon">
             <h1>Level Up Dashboard!</h1>
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset" style="transform: scaleX(-1);">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="transform: scaleX(-1);">
         </div>
         <div class="dash-layout">
             <div class="levels-flex">
                 <div class="circle">Level 1: Rookie<strong>1-3</strong></div>
                 <div class="circle">Level 2: Pro<strong>4-6</strong></div>
-                <div class="circle : Elite">Level 3: Elite<strong>7-10</strong></div>
+                <div class="circle">Level 3: Elite<strong>7-10</strong></div>
                 <div class="circle">Level 4: Master<strong>11-15</strong></div>
                 <div class="circle">Level 5: Conqueror<strong>20+</strong></div>
             </div>
-            <div class="list" id="level-list">Loading agents...</div>
+            <div class="list" id="level-list"></div>
         </div>
         <div class="quote">"Opportunities don't happen. You create them." — Chris Grosser</div>
     </div>
 
     <div class="container">
         <div class="header">
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset">
-            <h1 style="font-family: 'Playfair Display';">General Rank of Performance</h1>
-            <img src="https://i.imgur.com/8n8mXN6.png" class="headset" style="transform: scaleX(-1);">
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon">
+            <h1 style="font-family: 'Playfair Display'; font-style: italic;">General Rank of Performance</h1>
+            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="transform: scaleX(-1);">
         </div>
         <div class="rank-grid">
             <div class="col"><h2>2PM Update</h2><div class="list" id="col-2pm"></div></div>
@@ -60,47 +68,55 @@
     </div>
 
     <script>
-        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
 
-        async function updateLive() {
+        async function syncDashboard() {
             try {
-                const res = await fetch(`${url}&v=${new Date().getTime()}`);
-                const data = await res.text();
-                const rows = data.split('\n').map(r => r.split(',')).slice(1);
+                // Fetching with a timestamp prevents the browser from loading an old version of the sheet
+                const response = await fetch(`${sheetUrl}&ts=${new Date().getTime()}`);
+                const text = await response.text();
+                const rows = text.split('\n').map(r => r.split(',')).slice(1);
                 
-                let lvHtml = '', c2Html = '', c5Html = '', c8Html = '';
+                let lvMarkup = '', p2Markup = '', p5Markup = '', p8Markup = '';
 
                 rows.forEach(cols => {
                     const name = cols[0]?.trim();
                     if (!name || name === "") return;
 
-                    const leads2 = parseInt(cols[1]) || 0;
-                    const leads5 = parseInt(cols[2]) || 0;
-                    const leads8 = parseInt(cols[3]) || 0;
-                    const max = Math.max(leads2, leads5, leads8);
+                    // Grab numbers from Column B (2PM), C (5PM), and D (8PM)
+                    const v2 = parseInt(cols[1]) || 0;
+                    const v5 = parseInt(cols[2]) || 0;
+                    const v8 = parseInt(cols[3]) || 0;
+                    
+                    // Logic: Use the highest number of the day for the Level Badge
+                    const maxLeads = Math.max(v2, v5, v8);
+                    let levelLabel = '';
+                    if(maxLeads >= 20) levelLabel = 'LEVEL 5';
+                    else if(maxLeads >= 11) levelLabel = 'LEVEL 4';
+                    else if(maxLeads >= 7) levelLabel = 'LEVEL 3';
+                    else if(maxLeads >= 4) levelLabel = 'LEVEL 2';
+                    else if(maxLeads >= 1) levelLabel = 'LEVEL 1';
 
-                    let badge = '';
-                    if(max >= 20) badge = 'LEVEL 5';
-                    else if(max >= 11) badge = 'LEVEL 4';
-                    else if(max >= 7) badge = 'LEVEL 3';
-                    else if(max >= 4) badge = 'LEVEL 2';
-                    else if(max >= 1) badge = 'LEVEL 1';
-
-                    lvHtml += `<div class="item"><span>${name}</span>${badge ? `<span class="badge">${badge} Completed</span>` : ''}</div>`;
-                    c2Html += `<div class="item"><span>${name}</span><span class="score">${leads2 || ''}</span></div>`;
-                    c5Html += `<div class="item"><span>${name}</span><span class="score">${leads5 || ''}</span></div>`;
-                    c8Html += `<div class="item"><span>${name}</span><span class="score">${leads8 || ''}</span></div>`;
+                    lvMarkup += `<div class="item"><span>${name}</span>${levelLabel ? `<span class="badge">${levelLabel} Completed</span>` : ''}</div>`;
+                    p2Markup += `<div class="item"><span>${name}</span><span class="score">${v2 || 0}</span></div>`;
+                    p5Markup += `<div class="item"><span>${name}</span><span class="score">${v5 || 0}</span></div>`;
+                    p8Markup += `<div class="item"><span>${name}</span><span class="score">${v8 || 0}</span></div>`;
                 });
 
-                document.getElementById('level-list').innerHTML = lvHtml;
-                document.getElementById('col-2pm').innerHTML = c2Html;
-                document.getElementById('col-5pm').innerHTML = c5Html;
-                document.getElementById('col-8pm').innerHTML = c8Html;
-            } catch (e) { console.error("Sync Error:", e); }
+                document.getElementById('level-list').innerHTML = lvMarkup;
+                document.getElementById('col-2pm').innerHTML = p2Markup;
+                document.getElementById('col-5pm').innerHTML = p5Markup;
+                document.getElementById('col-8pm').innerHTML = p8Markup;
+
+            } catch (error) {
+                console.error("Connection failed:", error);
+            }
         }
 
-        updateLive();
-        setInterval(updateLive, 10000); 
+        // Initial sync
+        syncDashboard();
+        // Automatic refresh every 10 seconds
+        setInterval(syncDashboard, 10000);
     </script>
 </body>
 </html>
