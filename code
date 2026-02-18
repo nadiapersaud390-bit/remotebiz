@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Level Up | Live Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            background-color: #020617;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .header-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Badge Glows */
+        .badge-lvl-1 { filter: drop-shadow(0 0 5px #94a3b8); } /* Rookie */
+        .badge-lvl-2 { filter: drop-shadow(0 0 5px #3b82f6); } /* Pro */
+        .badge-lvl-3 { filter: drop-shadow(0 0 8px #f97316); } /* Elite */
+        .badge-lvl-4 { filter: drop-shadow(0 0 10px #eab308); } /* Master */
+        .badge-lvl-5 { filter: drop-shadow(0 0 15px #ef4444); } /* Conqueror */
+
+        .live-indicator {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .scroll-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="p-4 max-w-md mx-auto pb-10">
+
+    <!-- Header Area -->
+    <div class="flex justify-between items-center mb-4 px-1">
+        <div class="flex items-center">
+            <span class="live-indicator"></span>
+            <span class="text-[9px] font-black tracking-widest text-green-500 uppercase italic">Sheet Sync Active</span>
+        </div>
+        <div class="text-[9px] text-slate-500 font-bold uppercase italic">Remote Force</div>
+    </div>
+
+    <div class="text-center mb-6">
+        <h1 class="header-font text-2xl font-black tracking-tighter bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent italic">
+            LEVEL UP: REMOTE
+        </h1>
+        <div class="flex justify-center gap-2 mt-2">
+            <span class="text-[8px] bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-slate-400 font-bold uppercase">2PM</span>
+            <span class="text-[8px] bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-slate-400 font-bold uppercase">5PM</span>
+            <span class="text-[8px] bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-slate-400 font-bold uppercase underline decoration-cyan-500">8PM</span>
+        </div>
+    </div>
+
+    <!-- Tier Reference (Mini) -->
+    <div class="grid grid-cols-5 gap-1 mb-6 px-1">
+        <div class="text-center">
+            <div class="text-[7px] font-bold text-slate-500 mb-1 uppercase tracking-tighter">Lvl 1</div>
+            <i class="fas fa-shield text-slate-400 text-xs badge-lvl-1"></i>
+        </div>
+        <div class="text-center border-l border-white/5">
+            <div class="text-[7px] font-bold text-blue-500 mb-1 uppercase tracking-tighter">Lvl 2</div>
+            <i class="fas fa-sword text-blue-500 text-xs badge-lvl-2"></i>
+        </div>
+        <div class="text-center border-l border-white/5">
+            <div class="text-[7px] font-bold text-orange-500 mb-1 uppercase tracking-tighter">Lvl 3</div>
+            <i class="fas fa-fire text-orange-500 text-xs badge-lvl-3"></i>
+        </div>
+        <div class="text-center border-l border-white/5">
+            <div class="text-[7px] font-bold text-yellow-500 mb-1 uppercase tracking-tighter">Lvl 4</div>
+            <i class="fas fa-crown text-yellow-500 text-xs badge-lvl-4"></i>
+        </div>
+        <div class="text-center border-l border-white/5">
+            <div class="text-[7px] font-bold text-red-500 mb-1 uppercase tracking-tighter">Lvl 5</div>
+            <i class="fas fa-bolt text-red-500 text-xs badge-lvl-5"></i>
+        </div>
+    </div>
+
+    <!-- The Leaderboard -->
+    <div id="leaderboard" class="space-y-2">
+        <!-- Rows will appear here -->
+        <div class="text-center text-slate-600 py-10 animate-pulse">
+            <i class="fas fa-sync fa-spin mb-2"></i>
+            <p class="text-[10px] uppercase font-bold tracking-widest">Connecting to Spreadsheet...</p>
+        </div>
+    </div>
+
+    <!-- Architect Footer -->
+    <div class="mt-10 text-center opacity-50">
+        <p class="text-[8px] font-black tracking-[0.3em] text-slate-500 uppercase italic">Architect: Rozita</p>
+    </div>
+
+    <script>
+        /**
+         * ROZITA: Replace this URL with your Google Sheets "Web App" URL 
+         * after you set up the Google Apps Script.
+         */
+        const SHEET_API_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL";
+
+        const levels = [
+            { min: 20, title: "Level 5: Conqueror", icon: "fa-bolt", color: "text-red-500", badge: "badge-lvl-5", label: "Completed" },
+            { min: 11, title: "Level 4: Master", icon: "fa-crown", color: "text-yellow-500", badge: "badge-lvl-4", label: "Completed" },
+            { min: 7, title: "Level 3: Elite", icon: "fa-fire", color: "text-orange-500", badge: "badge-lvl-3", label: "Completed" },
+            { min: 4, title: "Level 2: Pro", icon: "fa-sword", color: "text-blue-500", badge: "badge-lvl-2", label: "Completed" },
+            { min: 1, title: "Level 1: Rookie", icon: "fa-shield", color: "text-slate-400", badge: "badge-lvl-1", label: "Completed" },
+            { min: 0, title: "Level 0: Waiting", icon: "fa-clock", color: "text-slate-700", badge: "", label: "" }
+        ];
+
+        function getAgentLevel(leads) {
+            return levels.find(l => leads >= l.min);
+        }
+
+        function updateUI(data) {
+            const container = document.getElementById('leaderboard');
+            
+            // Sort data by leads (High to Low)
+            data.sort((a, b) => b.leads - a.leads);
+
+            container.innerHTML = data.map((agent, index) => {
+                const lvl = getAgentLevel(agent.leads);
+                const isTop3 = index < 3;
+                
+                return `
+                    <div class="glass px-4 py-3 rounded-xl flex justify-between items-center transition-all duration-700">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-black italic ${isTop3 ? 'text-cyan-400' : 'text-slate-700'}">
+                                ${(index + 1).toString().padStart(2, '0')}
+                            </span>
+                            <div>
+                                <div class="text-[11px] font-bold tracking-tight text-slate-200">${agent.name}</div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <i class="fas ${lvl.icon} text-[9px] ${lvl.color} ${lvl.badge}"></i>
+                                    <span class="text-[8px] font-black uppercase tracking-widest ${lvl.color}">${lvl.title}</span>
+                                    ${agent.leads > 0 ? `<span class="text-[7px] text-green-500 font-bold italic ml-1">${lvl.label}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black text-white leading-none">${agent.leads}</div>
+                            <div class="text-[7px] text-slate-600 font-bold uppercase">Transfers</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mock data for initial preview (Rozita: This will be replaced by your real sheet data)
+        const mockData = [
+            { name: "GY Alice Hernandez", leads: 15 },
+            { name: "GYP Chauncey Piere", leads: 4 },
+            { name: "GYP Hannah Baptiste", leads: 1 },
+            { name: "GY May Umandal", leads: 0 },
+            { name: "GYP Nathalia Charles", leads: 0 },
+            { name: "GYP Sandra Lewis", leads: 0 }
+        ];
+
+        // Function to fetch data from your Google Sheet
+        async function fetchSheetData() {
+            if (SHEET_API_URL === "YOUR_GOOGLE_SCRIPT_WEB_APP_URL") {
+                // If not set up yet, show mock data
+                updateUI(mockData);
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEET_API_URL);
+                const data = await response.json();
+                updateUI(data);
+            } catch (err) {
+                console.error("Sheet Sync Error:", err);
+            }
+        }
+
+        // Initial Load
+        window.onload = () => {
+            fetchSheetData();
+            // Refresh every 30 seconds to stay live
+            setInterval(fetchSheetData, 30000);
+        };
+    </script>
+</body>
+</html>
