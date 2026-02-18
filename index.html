@@ -17,57 +17,75 @@
         
         .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         
-        /* CIRCLE LAYOUT: Curved SVG Top, Icon Middle, Leads Bottom */
         .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        
         .circle { 
-            border: 3px solid var(--cyan); 
+            border: 4px solid var(--cyan); 
             border-radius: 50%; 
-            width: 140px; 
-            height: 140px; 
+            width: 150px; 
+            height: 150px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             align-items: center; 
-            text-align: center; 
-            box-sizing: border-box;
-            box-shadow: 0 0 15px rgba(69,243,255,0.4); 
+            background-color: #fff; 
             position: relative;
-            background-repeat: no-repeat;
-            background-position: center 55%; 
-            background-size: 50px; 
+            box-shadow: 0 0 15px rgba(69,243,255,0.6);
+            overflow: hidden; /* Keeps the dark header inside the circle */
         }
 
-        /* SVG Curved Text Styling */
+        /* Dark header area for the curved text - ensures it stays INSIDE */
+        .circle::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 45px;
+            background: #222;
+            z-index: 1;
+        }
+
+        /* SVG Curved Text - Positioned to be clearly inside the circle */
         .circle svg {
+            position: absolute;
+            top: 2px; /* Pulls it down slightly from the very top edge */
             width: 100%;
-            height: 40px;
+            height: 80px;
+            z-index: 2;
+        }
+
+        .circle text {
             fill: #fff;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: bold;
             text-transform: uppercase;
-            overflow: visible;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0.5px;
         }
 
-        .circle strong { font-size: 1.1rem; color: var(--cyan); padding-bottom: 15px; }
+        .icon-container {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2;
+            margin-top: 50px; /* Pushed down to clear the curved text */
+        }
         
-        .lvl-1 { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
-        .lvl-2 { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
-        .lvl-3 { background-image: url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
-        .lvl-4 { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
-        .lvl-5 { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
+        .leads-label { color: #333; font-weight: bold; font-size: 0.75rem; z-index: 2; margin-top: -2px; }
+        .circle strong { font-size: 1.3rem; color: var(--cyan); z-index: 2; padding-bottom: 12px; text-shadow: 1px 1px 1px #000; }
+        
+        .lvl-1 .icon-container { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
+        .lvl-2 .icon-container { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
+        .lvl-3 .icon-container { background-image: url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
+        .lvl-4 .icon-container { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
+        .lvl-5 .icon-container { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
 
+        /* Agent List & Ranking */
         .list { display: flex; flex-direction: column; gap: 12px; }
         .item { background: var(--card); padding: 15px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; border-bottom: 1px solid #333; }
         
-        .badge-box { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            background: rgba(255, 140, 0, 0.15); 
-            padding: 6px 14px; 
-            border-radius: 5px; 
-            border: 1px solid var(--orange); 
-        }
+        .badge-box { display: flex; align-items: center; gap: 10px; background: rgba(255, 140, 0, 0.15); padding: 6px 14px; border-radius: 5px; border: 1px solid var(--orange); }
         .level-icon { width: 32px; height: 32px; object-fit: contain; }
         .badge-text { font-weight: bold; font-size: 0.9rem; color: var(--orange); text-transform: uppercase; }
         
@@ -89,38 +107,48 @@
         <div class="dash-layout">
             <div class="levels-flex">
                 <div class="circle lvl-1">
-                    <svg viewBox="0 0 100 35">
-                        <path id="curve-1" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
-                        <text><textPath xlink:href="#curve-1" startOffset="50%" text-anchor="middle">Level 1: Rookie</textPath></text>
+                    <svg viewBox="0 0 100 100">
+                        <path id="path1" d="M 22,40 A 28,28 0 0,1 78,40" fill="none" />
+                        <text><textPath xlink:href="#path1" startOffset="50%" text-anchor="middle">Level 1: Rookie</textPath></text>
                     </svg>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
                     <strong>1-3</strong>
                 </div>
                 <div class="circle lvl-2">
-                    <svg viewBox="0 0 100 35">
-                        <path id="curve-2" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
-                        <text><textPath xlink:href="#curve-2" startOffset="50%" text-anchor="middle">Level 2: Pro</textPath></text>
+                    <svg viewBox="0 0 100 100">
+                        <path id="path2" d="M 22,40 A 28,28 0 0,1 78,40" fill="none" />
+                        <text><textPath xlink:href="#path2" startOffset="50%" text-anchor="middle">Level 2: Pro</textPath></text>
                     </svg>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
                     <strong>4-6</strong>
                 </div>
                 <div class="circle lvl-3">
-                    <svg viewBox="0 0 100 35">
-                        <path id="curve-3" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
-                        <text><textPath xlink:href="#curve-3" startOffset="50%" text-anchor="middle">Level 3: Elite</textPath></text>
+                    <svg viewBox="0 0 100 100">
+                        <path id="path3" d="M 22,40 A 28,28 0 0,1 78,40" fill="none" />
+                        <text><textPath xlink:href="#path3" startOffset="50%" text-anchor="middle">Level 3: Elite</textPath></text>
                     </svg>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
                     <strong>7-10</strong>
                 </div>
                 <div class="circle lvl-4">
-                    <svg viewBox="0 0 100 35">
-                        <path id="curve-4" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
-                        <text><textPath xlink:href="#curve-4" startOffset="50%" text-anchor="middle">Level 4: Master</textPath></text>
+                    <svg viewBox="0 0 100 100">
+                        <path id="path4" d="M 22,40 A 28,28 0 0,1 78,40" fill="none" />
+                        <text><textPath xlink:href="#path4" startOffset="50%" text-anchor="middle">Level 4: Master</textPath></text>
                     </svg>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
                     <strong>11-15</strong>
                 </div>
                 <div class="circle lvl-5">
-                    <svg viewBox="0 0 100 35">
-                        <path id="curve-5" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
-                        <text><textPath xlink:href="#curve-5" startOffset="50%" text-anchor="middle">Level 5: Conqueror</textPath></text>
+                    <svg viewBox="0 0 100 100">
+                        <path id="path5" d="M 22,40 A 28,28 0 0,1 78,40" fill="none" />
+                        <text><textPath xlink:href="#path5" startOffset="50%" text-anchor="middle">Level 5: Conqueror</textPath></text>
                     </svg>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
                     <strong>20+</strong>
                 </div>
             </div>
