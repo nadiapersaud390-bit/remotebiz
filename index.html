@@ -3,85 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up Dashboard</title>
+    <title>Live Sales Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --cyan: #45f3ff; --card: #1c1f26; --text: #fff; --orange: #ff8c00; }
         body { background: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
         
-        .container { width: 95%; max-width: 1100px; border: 1px solid #444; padding: 30px; margin-bottom: 40px; background: #000; position: relative; }
+        .container { width: 95%; max-width: 1100px; border: 1px solid #444; padding: 30px; margin-bottom: 40px; background: rgba(5, 5, 5, 0.9); }
         
-        /* Header styling with closer headsets */
-        .header { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 40px; }
-        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 5rem; margin: 0; font-style: italic; text-shadow: 0 0 10px rgba(69,243,255,0.5); }
-        .headset-icon { width: 140px; height: auto; filter: drop-shadow(0 0 10px var(--cyan)); }
+        .header { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 4rem; margin: 0; font-style: italic; text-align: center; }
+        .headset-icon { width: 150px; height: auto; filter: drop-shadow(0 0 15px var(--cyan)); }
         
-        .dash-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; }
+        .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         
-        /* Circle Styling to match image */
-        .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; max-width: 500px; }
+        /* CIRCLE LAYOUT: Curved SVG Top, Icon Middle, Leads Bottom */
+        .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         .circle { 
-            border: 4px solid var(--cyan); 
+            border: 3px solid var(--cyan); 
             border-radius: 50%; 
-            width: 145px; 
-            height: 145px; 
+            width: 140px; 
+            height: 140px; 
             display: flex; 
             flex-direction: column; 
+            justify-content: space-between; 
             align-items: center; 
-            justify-content: center;
-            background-color: #fff; /* White inner background */
+            text-align: center; 
+            box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(69,243,255,0.4); 
+            position: relative;
             background-repeat: no-repeat;
             background-position: center 55%; 
             background-size: 50px; 
-            position: relative;
-            box-shadow: 0 0 15px var(--cyan);
         }
 
-        /* Black curved text area at the top */
-        .circle::before {
-            content: "";
-            position: absolute;
-            top: -2px; left: -2px; right: -2px;
-            height: 55px;
-            background: #222; /* Dark top section for text */
-            border-radius: 145px 145px 0 0;
-            z-index: 1;
-        }
-
+        /* SVG Curved Text Styling */
         .circle svg {
-            position: absolute;
-            top: 5px;
             width: 100%;
-            height: 50px;
-            z-index: 2;
+            height: 40px;
             fill: #fff;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
-            text-transform: capitalize;
+            text-transform: uppercase;
+            overflow: visible;
         }
 
-        /* Middle "Leads" label */
-        .leads-label { 
-            z-index: 2; 
-            color: #333; 
-            font-weight: bold; 
-            font-size: 0.8rem; 
-            margin-top: 15px; 
-            margin-bottom: 35px; /* Space for icon */
-        }
-
-        /* Bottom Lead Count */
-        .leads-count { 
-            z-index: 2; 
-            color: var(--cyan); 
-            font-size: 1.4rem; 
-            font-weight: 900; 
-            background: #fff;
-            padding: 0 5px;
-        }
-        
-        /* Special Border for Conqueror */
-        .lvl-5 { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+        .circle strong { font-size: 1.1rem; color: var(--cyan); padding-bottom: 15px; }
         
         .lvl-1 { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
         .lvl-2 { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
@@ -89,20 +56,26 @@
         .lvl-4 { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
         .lvl-5 { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
 
-        /* Agent list layout */
-        .list { display: flex; flex-direction: column; gap: 10px; }
-        .item { background: #252830; padding: 12px 20px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; min-height: 45px; }
-        .agent-name { font-size: 1.3rem; color: #ddd; font-family: 'Playfair Display', serif; }
+        .list { display: flex; flex-direction: column; gap: 12px; }
+        .item { background: var(--card); padding: 15px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; min-height: 50px; border-bottom: 1px solid #333; }
         
         .badge-box { 
             display: flex; 
             align-items: center; 
             gap: 10px; 
-            background: transparent;
+            background: rgba(255, 140, 0, 0.15); 
+            padding: 6px 14px; 
+            border-radius: 5px; 
+            border: 1px solid var(--orange); 
         }
-        .completed-badge { width: 120px; height: auto; } /* Image of the "Completed" ribbon */
+        .level-icon { width: 32px; height: 32px; object-fit: contain; }
+        .badge-text { font-weight: bold; font-size: 0.9rem; color: var(--orange); text-transform: uppercase; }
         
-        #live-quote { margin-top: 40px; font-style: normal; color: #fff; text-align: left; font-size: 1.8rem; font-family: 'Playfair Display', serif; }
+        .score { color: var(--cyan); font-weight: bold; font-size: 1.8rem; text-shadow: 0 0 10px var(--cyan); }
+        .rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+        .col h2 { text-align: center; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; font-size: 1.5rem; color: var(--cyan); }
+        
+        #live-quote { margin-top: 40px; font-style: italic; color: #aaa; border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 1.4rem; }
     </style>
 </head>
 <body>
@@ -113,55 +86,60 @@
             <h1>Level Up Dashboard!</h1>
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
         </div>
-
         <div class="dash-layout">
             <div class="levels-flex">
                 <div class="circle lvl-1">
-                    <svg viewBox="0 0 100 40">
-                        <path id="c1" d="M 15,35 A 35,35 0 0,1 85,35" fill="transparent" />
-                        <text><textPath xlink:href="#c1" startOffset="50%" text-anchor="middle">Level 1: The Rookie</textPath></text>
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-1" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-1" startOffset="50%" text-anchor="middle">Level 1: Rookie</textPath></text>
                     </svg>
-                    <div class="leads-label">Leads</div>
-                    <div class="leads-count">1-3</div>
+                    <strong>1-3</strong>
                 </div>
                 <div class="circle lvl-2">
-                    <svg viewBox="0 0 100 40">
-                        <path id="c2" d="M 15,35 A 35,35 0 0,1 85,35" fill="transparent" />
-                        <text><textPath xlink:href="#c2" startOffset="50%" text-anchor="middle">Level 2: The Pro</textPath></text>
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-2" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-2" startOffset="50%" text-anchor="middle">Level 2: Pro</textPath></text>
                     </svg>
-                    <div class="leads-label">Leads</div>
-                    <div class="leads-count">4-6</div>
+                    <strong>4-6</strong>
                 </div>
                 <div class="circle lvl-3">
-                    <svg viewBox="0 0 100 40">
-                        <path id="c3" d="M 15,35 A 35,35 0 0,1 85,35" fill="transparent" />
-                        <text><textPath xlink:href="#c3" startOffset="50%" text-anchor="middle">Level 3: The Elite</textPath></text>
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-3" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-3" startOffset="50%" text-anchor="middle">Level 3: Elite</textPath></text>
                     </svg>
-                    <div class="leads-label">Leads</div>
-                    <div class="leads-count">7-10</div>
+                    <strong>7-10</strong>
                 </div>
                 <div class="circle lvl-4">
-                    <svg viewBox="0 0 100 40">
-                        <path id="c4" d="M 15,35 A 35,35 0 0,1 85,35" fill="transparent" />
-                        <text><textPath xlink:href="#c4" startOffset="50%" text-anchor="middle">Level 4: The Master</textPath></text>
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-4" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-4" startOffset="50%" text-anchor="middle">Level 4: Master</textPath></text>
                     </svg>
-                    <div class="leads-label">Leads</div>
-                    <div class="leads-count">11-15</div>
+                    <strong>11-15</strong>
                 </div>
                 <div class="circle lvl-5">
-                    <svg viewBox="0 0 100 40">
-                        <path id="c5" d="M 15,35 A 35,35 0 0,1 85,35" fill="transparent" />
-                        <text><textPath xlink:href="#c5" startOffset="50%" text-anchor="middle">Level 5: The Conqueror</textPath></text>
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-5" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-5" startOffset="50%" text-anchor="middle">Level 5: Conqueror</textPath></text>
                     </svg>
-                    <div class="leads-label">Leads</div>
-                    <div class="leads-count">20+</div>
+                    <strong>20+</strong>
                 </div>
             </div>
-
             <div class="list" id="level-list"></div>
         </div>
+        <div id="live-quote"></div>
+    </div>
 
-        <div id="live-quote">"Opportunities don't happen. You create them."<br><small>— Chris Grosser</small></div>
+    <div class="container">
+        <div class="header">
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
+            <h1 style="font-family: 'Playfair Display'; font-style: italic;">General Rank of Performance</h1>
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
+        </div>
+        <div class="rank-grid">
+            <div class="col"><h2>2PM Update</h2><div class="list" id="col-2pm"></div></div>
+            <div class="col"><h2>5PM Update</h2><div class="list" id="col-5pm"></div></div>
+            <div class="col"><h2>8PM Update</h2><div class="list" id="col-8pm"></div></div>
+        </div>
     </div>
 
     <script>
@@ -173,29 +151,42 @@
                 const data = await res.text();
                 const rows = data.split('\n').map(r => r.split(','));
                 
-                // Agent Data Processing
+                if (rows[7] && rows[7][0]) document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
+
                 const agentRows = rows.slice(1, 7); 
                 let agents = agentRows.map(cols => {
                     const v2 = parseInt(cols[1]) || 0;
                     const v5 = parseInt(cols[2]) || 0;
                     const v8 = parseInt(cols[3]) || 0;
-                    return { name: cols[0]?.trim(), max: Math.max(v2, v5, v8) };
+                    return { name: cols[0]?.trim(), v2, v5, v8, max: Math.max(v2, v5, v8) };
                 }).filter(a => a.name);
 
-                // Sort by performance
-                agents.sort((a, b) => b.max - a.max);
+                const sortedAgents = [...agents].sort((a, b) => b.max - a.max);
 
-                let lvH = '';
-                agents.forEach(a => {
+                let lvH = '', c2H = '', c5H = '', c8H = '';
+
+                sortedAgents.forEach(a => {
                     let badgeHtml = '';
                     if(a.max >= 1) {
-                        // Using a placeholder for the "Level Completed" ribbon image found in your screenshot
-                        badgeHtml = `<div class="badge-box"><img src="https://i.postimg.cc/0jWbP3S7/Level-Badge.png" class="completed-badge"></div>`;
+                        let iconUrl = 'https://i.postimg.cc/pTPgJVNS/Shield.png';
+                        let lvName = 'LEVEL 1';
+                        if(a.max >= 4) { lvName = 'LEVEL 2'; iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; }
+                        if(a.max >= 7) { lvName = 'LEVEL 3'; iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; }
+                        if(a.max >= 11) { lvName = 'LEVEL 4'; iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; }
+                        if(a.max >= 20) { lvName = 'LEVEL 5'; iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; }
+                        badgeHtml = `<div class="badge-box"><img src="${iconUrl}" class="level-icon"><span class="badge-text">${lvName} Completed</span></div>`;
                     }
-                    lvH += `<div class="item"><span class="agent-name">${a.name}</span>${badgeHtml}</div>`;
+                    lvH += `<div class="item"><span>${a.name}</span>${badgeHtml}</div>`;
                 });
 
+                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span>${a.name}</span><span class="score">${a.v2 || ''}</span></div>`);
+                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span>${a.name}</span><span class="score">${a.v5 || ''}</span></div>`);
+                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span>${a.name}</span><span class="score">${a.v8 || ''}</span></div>`);
+
                 document.getElementById('level-list').innerHTML = lvH;
+                document.getElementById('col-2pm').innerHTML = c2H;
+                document.getElementById('col-5pm').innerHTML = c5H;
+                document.getElementById('col-8pm').innerHTML = c8H;
             } catch (e) { console.error(e); }
         }
         sync();
