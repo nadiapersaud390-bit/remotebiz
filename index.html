@@ -26,118 +26,112 @@
         }
 
         .container {
-            width: 90%;
-            max-width: 1000px;
+            width: 95%;
+            max-width: 1100px;
             border: 1px solid var(--border-grey);
-            padding: 20px;
+            padding: 25px;
             position: relative;
             margin-bottom: 40px;
+            background: rgba(0,0,0,0.3);
         }
 
-        /* Headers */
         .header-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
             color: var(--cyan);
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin: 0;
+            text-shadow: 0 0 10px rgba(69, 243, 255, 0.5);
         }
 
         .headset-icon {
-            width: 80px;
+            width: 90px;
             height: auto;
         }
 
-        /* Levels Section */
+        /* Levels Circles */
         .dashboard-content {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 20px;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
         }
 
         .levels-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
         }
 
         .level-circle {
             border: 3px solid var(--cyan);
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 0.7rem;
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
         }
 
-        /* List Items */
-        .name-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .level-circle span { font-size: 0.7rem; font-weight: bold; }
+        .level-circle strong { font-size: 0.9rem; margin-top: 5px; }
 
+        /* Rows */
+        .name-list { display: flex; flex-direction: column; gap: 12px; }
         .list-item {
-            background: #2a2e35;
-            padding: 12px 20px;
-            border-radius: 5px;
+            background: #1c1f26;
+            padding: 15px 20px;
+            border-radius: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .status-badge {
-            color: var(--cyan);
-            font-weight: bold;
+            font-size: 1.1rem;
         }
 
         .completed-tag {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid red;
+            background: linear-gradient(135deg, #ff8c00, #ff4500);
             color: white;
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
         }
 
-        /* Rank Table Section */
+        .score-val { color: var(--cyan); font-weight: bold; font-size: 1.4rem; }
+
         .rank-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 20px;
             width: 100%;
         }
 
-        .update-column h3 {
+        h2.update-title {
             text-align: center;
-            border-bottom: 1px solid var(--cyan);
+            border-bottom: 2px solid var(--cyan);
             padding-bottom: 10px;
-        }
-
-        .score {
-            color: var(--cyan);
-            font-weight: bold;
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
         }
 
         blockquote {
             font-style: italic;
-            border-top: 1px solid #444;
+            border-top: 1px solid #333;
             padding-top: 20px;
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: center;
+            color: #888;
         }
     </style>
 </head>
@@ -145,74 +139,99 @@
 
     <div class="container">
         <div class="header-section">
-            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="filter: hue-rotate(180deg);">
+            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg);">
             <h1>Level Up Dashboard!</h1>
-            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
+            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
         </div>
 
         <div class="dashboard-content">
             <div class="levels-grid">
-                <div class="level-circle">
-                    <span>Level 1: Rookie</span>
-                    <strong>1-3 Leads</strong>
-                </div>
-                <div class="level-circle">
-                    <span>Level 2: Pro</span>
-                    <strong>4-6 Leads</strong>
-                </div>
-                </div>
-
-            <div class="name-list">
-                <div class="list-item">GY Alice Hernandez <span class="completed-tag">Level 1 Completed</span></div>
-                <div class="list-item">GY May Umandal</div>
-                <div class="list-item">GYP Chauncey Piere <span class="completed-tag">Level 1 Completed</span></div>
-                <div class="list-item">GYP Hannah Baptiste</div>
-                <div class="list-item">GYP Nathalia Charles</div>
-                <div class="list-item">GYP Sandra Lewis</div>
+                <div class="level-circle"><span>Level 1: Rookie</span><strong>Leads 1-3</strong></div>
+                <div class="level-circle"><span>Level 2: Pro</span><strong>Leads 4-6</strong></div>
+                <div class="level-circle"><span>Level 3: Elite</span><strong>Leads 7-10</strong></div>
+                <div class="level-circle"><span>Level 4: Master</span><strong>Leads 11-15</strong></div>
+                <div class="level-circle"><span>Level 5: Conqueror</span><strong>Leads 20+</strong></div>
             </div>
-        </div>
 
+            <div class="name-list" id="level-up-list">
+                </div>
+        </div>
         <blockquote>"Opportunities don't happen. You create them." — Chris Grosser</blockquote>
     </div>
 
     <div class="container">
         <div class="header-section">
-            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="filter: hue-rotate(180deg);">
+            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg);">
             <h1>General Rank of Performance</h1>
-            <img src="https://cdn-icons-png.flaticon.com/512/1211/1211441.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
+            <img src="https://i.imgur.com/8n8mXN6.png" class="headset-icon" style="filter: hue-rotate(180deg); transform: scaleX(-1);">
         </div>
 
         <div class="rank-grid">
-            <div class="update-column">
-                <h3>2PM Update</h3>
-                <div class="name-list">
-                    <div class="list-item">GY Alice Hernandez <span class="score">4</span></div>
-                    <div class="list-item">GYP Chauncey Piere <span class="score">4</span></div>
-                    <div class="list-item">GYP Hannah Baptiste <span class="score">1</span></div>
-                    <div class="list-item">GY May Umandal <span class="score"></span></div>
-                    <div class="list-item">GYP Nathalia Charles <span class="score"></span></div>
-                </div>
+            <div class="update-col">
+                <h2 class="update-title">2PM Update</h2>
+                <div class="name-list" id="rank-2pm"></div>
             </div>
-
-            <div class="update-column">
-                <h3>5PM Update</h3>
-                <div class="name-list">
-                    <div class="list-item" style="height: 25px;"></div>
-                    <div class="list-item" style="height: 25px;"></div>
-                    <div class="list-item" style="height: 25px;"></div>
-                </div>
+            <div class="update-col">
+                <h2 class="update-title">5PM Update</h2>
+                <div class="name-list" id="rank-5pm"></div>
             </div>
-
-            <div class="update-column">
-                <h3>8PM Update</h3>
-                <div class="name-list">
-                    <div class="list-item" style="height: 25px;"></div>
-                    <div class="list-item" style="height: 25px;"></div>
-                    <div class="list-item" style="height: 25px;"></div>
-                </div>
+            <div class="update-col">
+                <h2 class="update-title">8PM Update</h2>
+                <div class="name-list" id="rank-8pm"></div>
             </div>
         </div>
     </div>
 
+    <script>
+        // Your specific CSV link
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
+
+        async function fetchData() {
+            try {
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                
+                // Parse CSV rows
+                const rows = data.split('\n').map(row => row.split(','));
+                const levelList = document.getElementById('level-up-list');
+                const rankList = document.getElementById('rank-2pm');
+                
+                levelList.innerHTML = '';
+                rankList.innerHTML = '';
+
+                // Skip header row
+                for (let i = 1; i < rows.length; i++) {
+                    const name = rows[i][0]?.trim();
+                    const leads = parseInt(rows[i][1]) || 0;
+
+                    if (!name) continue;
+
+                    // Level Up Logic based on your dashboard images
+                    let badge = "";
+                    if (leads >= 1) badge = `<span class="completed-tag">LEVEL 1 Completed</span>`;
+                    
+                    // Add to Top Dashboard
+                    levelList.innerHTML += `
+                        <div class="list-item">
+                            <span>${name}</span>
+                            ${badge}
+                        </div>`;
+
+                    // Add to Rank Dashboard
+                    rankList.innerHTML += `
+                        <div class="list-item">
+                            <span>${name}</span>
+                            <span class="score-val">${leads}</span>
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Run on load and every 60 seconds
+        fetchData();
+        setInterval(fetchData, 60000);
+    </script>
 </body>
 </html>
