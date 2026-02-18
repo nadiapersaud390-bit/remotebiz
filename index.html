@@ -17,27 +17,38 @@
         
         .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         
+        /* CIRCLE LAYOUT: Curved SVG Top, Icon Middle, Leads Bottom */
         .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         .circle { 
             border: 3px solid var(--cyan); 
             border-radius: 50%; 
-            width: 135px; 
-            height: 135px; 
+            width: 140px; 
+            height: 140px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             align-items: center; 
             text-align: center; 
-            padding: 12px 0; 
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(69,243,255,0.4); 
             position: relative;
             background-repeat: no-repeat;
-            background-position: center center; 
-            background-size: 55px; 
+            background-position: center 55%; 
+            background-size: 50px; 
         }
-        .circle span { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #fff; }
-        .circle strong { font-size: 1rem; color: var(--cyan); }
+
+        /* SVG Curved Text Styling */
+        .circle svg {
+            width: 100%;
+            height: 40px;
+            fill: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            overflow: visible;
+        }
+
+        .circle strong { font-size: 1.1rem; color: var(--cyan); padding-bottom: 15px; }
         
         .lvl-1 { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
         .lvl-2 { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
@@ -56,7 +67,6 @@
             padding: 6px 14px; 
             border-radius: 5px; 
             border: 1px solid var(--orange); 
-            box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
         }
         .level-icon { width: 32px; height: 32px; object-fit: contain; }
         .badge-text { font-weight: bold; font-size: 0.9rem; color: var(--orange); text-transform: uppercase; }
@@ -78,11 +88,41 @@
         </div>
         <div class="dash-layout">
             <div class="levels-flex">
-                <div class="circle lvl-1"><span>Level 1: Rookie</span><strong>1-3</strong></div>
-                <div class="circle lvl-2"><span>Level 2: Pro</span><strong>4-6</strong></div>
-                <div class="circle lvl-3"><span>Level 3: Elite</span><strong>7-10</strong></div>
-                <div class="circle lvl-4"><span>Level 4: Master</span><strong>11-15</strong></div>
-                <div class="circle lvl-5"><span>Level 5: Conqueror</span><strong>20+</strong></div>
+                <div class="circle lvl-1">
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-1" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-1" startOffset="50%" text-anchor="middle">Level 1: Rookie</textPath></text>
+                    </svg>
+                    <strong>1-3</strong>
+                </div>
+                <div class="circle lvl-2">
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-2" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-2" startOffset="50%" text-anchor="middle">Level 2: Pro</textPath></text>
+                    </svg>
+                    <strong>4-6</strong>
+                </div>
+                <div class="circle lvl-3">
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-3" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-3" startOffset="50%" text-anchor="middle">Level 3: Elite</textPath></text>
+                    </svg>
+                    <strong>7-10</strong>
+                </div>
+                <div class="circle lvl-4">
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-4" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-4" startOffset="50%" text-anchor="middle">Level 4: Master</textPath></text>
+                    </svg>
+                    <strong>11-15</strong>
+                </div>
+                <div class="circle lvl-5">
+                    <svg viewBox="0 0 100 35">
+                        <path id="curve-5" d="M 10,30 A 40,40 0 0,1 90,30" fill="transparent" />
+                        <text><textPath xlink:href="#curve-5" startOffset="50%" text-anchor="middle">Level 5: Conqueror</textPath></text>
+                    </svg>
+                    <strong>20+</strong>
+                </div>
             </div>
             <div class="list" id="level-list"></div>
         </div>
@@ -114,25 +154,17 @@
                 if (rows[7] && rows[7][0]) document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
 
                 const agentRows = rows.slice(1, 7); 
-                
-                // DATA PROCESSING
                 let agents = agentRows.map(cols => {
                     const v2 = parseInt(cols[1]) || 0;
                     const v5 = parseInt(cols[2]) || 0;
                     const v8 = parseInt(cols[3]) || 0;
-                    return {
-                        name: cols[0]?.trim(),
-                        v2, v5, v8,
-                        max: Math.max(v2, v5, v8)
-                    };
+                    return { name: cols[0]?.trim(), v2, v5, v8, max: Math.max(v2, v5, v8) };
                 }).filter(a => a.name);
 
-                // SORTING: Level Up Dashboard (Highest Max Leads Top)
                 const sortedAgents = [...agents].sort((a, b) => b.max - a.max);
 
                 let lvH = '', c2H = '', c5H = '', c8H = '';
 
-                // Build Level Up List (Sorted)
                 sortedAgents.forEach(a => {
                     let badgeHtml = '';
                     if(a.max >= 1) {
@@ -147,7 +179,6 @@
                     lvH += `<div class="item"><span>${a.name}</span>${badgeHtml}</div>`;
                 });
 
-                // Build Time Columns (Sorted by specific time)
                 [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span>${a.name}</span><span class="score">${a.v2 || ''}</span></div>`);
                 [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span>${a.name}</span><span class="score">${a.v5 || ''}</span></div>`);
                 [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span>${a.name}</span><span class="score">${a.v8 || ''}</span></div>`);
