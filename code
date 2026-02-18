@@ -1,210 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remote Level Up | Elite Tracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@400;700;900&display=swap');
-        
-        body {
-            background-color: #000000;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            overflow-x: hidden;
-        }
+/**
+ * ROZITA ARCHITECTURE V2.6 - REMOTE FORCE 6 (FIXED 400)
+ * Specifically designed for the 6 agents shown in your image.
+ */
 
-        .header-font { font-family: 'Orbitron', sans-serif; }
+function doGet() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    // Tab must be named "Remote"
+    const sheet = ss.getSheetByName("Remote"); 
+    
+    if (!sheet) {
+      return createJsonResponse({ 
+        error: "Sheet tab 'Remote' not found. Create a tab named Remote." 
+      });
+    }
+    
+    // We fetch the first 6 agents (Rows 2 to 7)
+    const dataRange = sheet.getRange(2, 1, 6, 2);
+    const values = dataRange.getValues();
+    
+    const data = values.map(row => {
+      return {
+        name: row[0] ? row[0].toString().trim() : "Empty Slot",
+        leads: parseInt(row[1]) || 0
+      };
+    }).filter(agent => agent.name !== "Empty Slot");
+    
+    return createJsonResponse(data);
 
-        .level-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #00d2ff;
-            background: rgba(0, 210, 255, 0.05);
-            position: relative;
-        }
+  } catch (e) {
+    return createJsonResponse({ error: "Script Error: " + e.toString() });
+  }
+}
 
-        .rank-column {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            min-height: 450px;
-        }
-
-        .agent-row {
-            background: #111827;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .pro-glow { border-left-color: #3b82f6; box-shadow: inset 5px 0 10px -5px rgba(59, 130, 246, 0.5); }
-        .master-glow { border-left-color: #eab308; box-shadow: inset 5px 0 10px -5px rgba(234, 179, 8, 0.5); }
-    </style>
-</head>
-<body class="p-2 md:p-6 max-w-6xl mx-auto pb-20">
-
-    <!-- TOP SECTION: LEVEL UP DASHBOARD -->
-    <div class="border border-white/20 p-4 md:p-8 rounded-sm mb-10 relative">
-        <div class="flex justify-between items-center mb-8 px-4">
-            <div class="text-cyan-400 text-4xl"><i class="fas fa-headset"></i></div>
-            <h1 class="italic text-4xl md:text-6xl text-cyan-400 font-light tracking-tight text-center" style="font-family: 'serif';">
-                Level Up Dashboard!
-            </h1>
-            <div class="text-cyan-400 text-4xl transform scale-x-[-1]"><i class="fas fa-headset"></i></div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <!-- Left Side: Level Circles (Legend) -->
-            <div class="space-y-6">
-                <div class="flex justify-center gap-4">
-                    <div class="text-center">
-                        <div class="level-circle mx-auto"><i class="fas fa-shield text-slate-400 text-xl"></i></div>
-                        <p class="text-[8px] mt-1 uppercase font-bold text-cyan-400">Level 1: Rookie</p>
-                        <p class="text-[9px] text-white font-black">1-3</p>
-                    </div>
-                    <div class="text-center">
-                        <!-- PRO ICON REQUESTED: SWORD -->
-                        <div class="level-circle mx-auto border-blue-500"><i class="fas fa-sword text-blue-500 text-xl"></i></div>
-                        <p class="text-[8px] mt-1 uppercase font-bold text-blue-500">Level 2: Pro</p>
-                        <p class="text-[9px] text-white font-black">4-6</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="level-circle mx-auto border-orange-500"><i class="fas fa-fire text-orange-500 text-xl"></i></div>
-                        <p class="text-[8px] mt-1 uppercase font-bold text-orange-500">Level 3: Elite</p>
-                        <p class="text-[9px] text-white font-black">7-10</p>
-                    </div>
-                </div>
-                <div class="flex justify-center gap-6">
-                    <div class="text-center">
-                        <div class="level-circle mx-auto border-yellow-500"><i class="fas fa-crown text-yellow-500 text-xl"></i></div>
-                        <p class="text-[8px] mt-1 uppercase font-bold text-yellow-500">Level 4: Master</p>
-                        <p class="text-[9px] text-white font-black">11-15</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="level-circle mx-auto border-red-500"><i class="fas fa-bolt text-red-500 text-xl"></i></div>
-                        <p class="text-[8px] mt-1 uppercase font-bold text-red-500">Level 5: Conqueror</p>
-                        <p class="text-[9px] text-white font-black">20+</p>
-                    </div>
-                </div>
-                <div class="text-center pt-6 italic border-t border-white/10 mt-6">
-                    <p class="text-sm text-slate-300 font-light">"Opportunities don't happen. You create them."</p>
-                    <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest">— Chris Grosser</p>
-                </div>
-            </div>
-
-            <!-- Right Side: Top Performer List -->
-            <div id="top-performers" class="space-y-2 min-h-[200px]">
-                <!-- Names will pull here from Google Sheet -->
-                <div class="text-center py-10 text-slate-800 text-[10px] font-bold uppercase tracking-widest italic">
-                    Syncing Agent List...
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BOTTOM SECTION: GENERAL RANK OF PERFORMANCE -->
-    <div class="border border-white/20 p-4 md:p-8 rounded-sm">
-        <div class="flex justify-center items-center gap-6 mb-10">
-            <div class="text-cyan-400 text-4xl"><i class="fas fa-headset"></i></div>
-            <h2 class="italic text-4xl md:text-5xl text-cyan-400 font-light text-center" style="font-family: 'serif';">
-                General Rank of Performance
-            </h2>
-            <div class="text-cyan-400 text-4xl transform scale-x-[-1]"><i class="fas fa-headset"></i></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="rank-column p-3">
-                <div class="text-center mb-4 pb-2 border-b border-white/10 text-cyan-400 text-xl font-light italic">2PM Update</div>
-                <div id="rank-2pm" class="space-y-1"></div>
-            </div>
-            <div class="rank-column p-3">
-                <div class="text-center mb-4 pb-2 border-b border-white/10 text-cyan-400 text-xl font-light italic">5PM Update</div>
-                <div id="rank-5pm" class="space-y-1"></div>
-            </div>
-            <div class="rank-column p-3">
-                <div class="text-center mb-4 pb-2 border-b border-white/10 text-cyan-400 text-xl font-light italic">8PM Update</div>
-                <div id="rank-8pm" class="space-y-1"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-8 text-center opacity-30">
-        <p class="text-[8px] font-black tracking-[0.5em] text-cyan-500 uppercase italic">Rozita Architecture V2.2</p>
-    </div>
-
-    <script>
-        const SHEET_API_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL";
-
-        const levels = [
-            { min: 20, icon: "fa-bolt", color: "text-red-500", glow: "border-red-600", label: "Level 5" },
-            { min: 11, icon: "fa-crown", color: "text-yellow-500", glow: "master-glow", label: "Level 4" },
-            { min: 7, icon: "fa-fire", color: "text-orange-500", glow: "border-orange-500", label: "Level 3" },
-            { min: 4, icon: "fa-sword", color: "text-blue-500", glow: "pro-glow", label: "Level 2" },
-            { min: 1, icon: "fa-shield", color: "text-slate-400", glow: "border-slate-600", label: "Level 1" },
-            { min: 0, icon: "", color: "text-slate-700", glow: "border-transparent", label: "" }
-        ];
-
-        function getLvl(leads) {
-            return levels.find(l => leads >= l.min);
-        }
-
-        function updateUI(data) {
-            if (!data || data.length === 0) return;
-            data.sort((a, b) => b.leads - a.leads);
-
-            // 1. Top Section Performer List (Level status)
-            const topList = document.getElementById('top-performers');
-            topList.innerHTML = data.slice(0, 15).map(agent => {
-                const lvl = getLvl(agent.leads);
-                return `
-                    <div class="agent-row p-3 rounded flex justify-between items-center ${lvl.glow}">
-                        <span class="text-sm font-medium text-slate-200">${agent.name}</span>
-                        <div class="flex items-center gap-2">
-                            ${agent.leads > 0 ? `
-                                <div class="bg-red-600 px-2 py-0.5 rounded flex items-center gap-1">
-                                    <span class="text-[8px] font-black italic">${lvl.label.split(' ')[1]}</span>
-                                    <span class="text-[7px] font-black uppercase">Level</span>
-                                </div>
-                                <span class="text-[10px] font-light italic text-slate-400">Completed</span>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // 2. Bottom Sections (Columns)
-            const columnHtml = data.map(agent => `
-                <div class="bg-gray-900/50 px-3 py-2 rounded flex justify-between items-center mb-1 border-b border-white/5">
-                    <span class="text-[11px] text-slate-400 font-medium">${agent.name}</span>
-                    <span class="text-cyan-400 text-lg font-black italic">${agent.leads || 0}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('rank-2pm').innerHTML = columnHtml;
-            document.getElementById('rank-5pm').innerHTML = columnHtml;
-            document.getElementById('rank-8pm').innerHTML = columnHtml;
-        }
-
-        async function fetchData() {
-            if (!SHEET_API_URL || SHEET_API_URL.includes("YOUR_GOOGLE")) return;
-            try {
-                const res = await fetch(SHEET_API_URL);
-                const data = await res.json();
-                updateUI(data);
-            } catch (e) { console.error("Sync Error:", e); }
-        }
-
-        window.onload = () => {
-            fetchData();
-            setInterval(fetchData, 60000);
-        };
-    </script>
-</body>
-</html>
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
