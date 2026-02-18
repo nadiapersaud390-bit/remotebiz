@@ -15,9 +15,17 @@
         .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 4rem; margin: 0; font-style: italic; text-align: center; }
         .headset-icon { width: 150px; height: auto; filter: drop-shadow(0 0 15px var(--cyan)); }
         
-        .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+        .dash-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: start; }
         
-        .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        /* 3-on-top, 2-on-bottom Layout */
+        .levels-flex { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+            justify-content: center; 
+            max-width: 520px; /* Constrains width to force the 3+2 wrap */
+            margin: 0 auto;
+        }
         
         .circle { 
             border: 4px solid var(--cyan); 
@@ -75,12 +83,15 @@
             background-repeat: no-repeat;
             background-position: center;
             z-index: 2;
-            margin-top: 55px; /* Pushed down below the straight text */
+            margin-top: 55px; 
         }
         
         .leads-label { color: #333; font-weight: bold; font-size: 0.75rem; z-index: 2; margin-top: -2px; }
         .circle strong { font-size: 1.3rem; color: var(--cyan); z-index: 2; padding-bottom: 12px; text-shadow: 1px 1px 1px #000; }
         
+        /* Special Border for Conqueror as seen in reference */
+        .lvl-5 { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+
         .lvl-1 .icon-container { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
         .lvl-2 .icon-container { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
         .lvl-3 .icon-container { background-image: url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
