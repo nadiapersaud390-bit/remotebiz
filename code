@@ -1,39 +1,279 @@
-/**
- * ROZITA ARCHITECTURE V2.6 - REMOTE FORCE 6 (FIXED 400)
- * Specifically designed for the 6 agents shown in your image.
- */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up Dashboard | Live Sync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Orbitron:wght@400;900&family=Inter:wght@300;400;700&display=swap');
+        
+        body {
+            background-color: #000000;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-function doGet() {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    // Tab must be named "Remote"
-    const sheet = ss.getSheetByName("Remote"); 
-    
-    if (!sheet) {
-      return createJsonResponse({ 
-        error: "Sheet tab 'Remote' not found. Create a tab named Remote." 
-      });
-    }
-    
-    // We fetch the first 6 agents (Rows 2 to 7)
-    const dataRange = sheet.getRange(2, 1, 6, 2);
-    const values = dataRange.getValues();
-    
-    const data = values.map(row => {
-      return {
-        name: row[0] ? row[0].toString().trim() : "Empty Slot",
-        leads: parseInt(row[1]) || 0
-      };
-    }).filter(agent => agent.name !== "Empty Slot");
-    
-    return createJsonResponse(data);
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
 
-  } catch (e) {
-    return createJsonResponse({ error: "Script Error: " + e.toString() });
-  }
-}
+        .header-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
 
-function createJsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+        .header-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            color: #4fd1ed;
+            text-shadow: 0 0 15px rgba(79, 209, 237, 0.4);
+        }
+
+        .headset-icon {
+            width: 70px;
+            filter: invert(72%) sepia(90%) saturate(321%) hue-rotate(145deg) brightness(101%) contrast(88%);
+        }
+
+        .board-frame {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            background: rgba(10, 10, 15, 0.5);
+            display: grid;
+            grid-template-cols: 1.2fr 1fr;
+            gap: 40px;
+        }
+
+        /* Level Circles Styling */
+        .tier-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #4fd1ed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            position: relative;
+            box-shadow: 0 0 15px rgba(79, 209, 237, 0.2);
+        }
+
+        .tier-label {
+            position: absolute;
+            top: -12px;
+            background: #000;
+            padding: 0 8px;
+            font-size: 8px;
+            font-weight: 900;
+            color: #4fd1ed;
+            white-space: nowrap;
+            letter-spacing: 1px;
+        }
+
+        .tier-leads {
+            font-size: 14px;
+            font-weight: 900;
+            color: #4fd1ed;
+            margin-top: 5px;
+        }
+
+        .tier-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+
+        /* Right Column Styling */
+        .agent-row {
+            background-color: #1e2129;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .agent-name {
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .completed-tag {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-top: 40px;
+            text-align: center;
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+        }
+
+        .live-pulse {
+            position: absolute;
+            top: -25px;
+            right: 10px;
+            font-size: 10px;
+            color: #ef4444;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div id="connection-status" class="live-pulse uppercase">
+            <span class="inline-block w-2 h-2 bg-red-600 rounded-full animate-pulse mr-1"></span>
+            Live Sheet Connection
+        </div>
+
+        <div class="header-section">
+            <img src="https://raw.githubusercontent.com/lucide-react/lucide/main/icons/headset.svg" class="headset-icon">
+            <h1 class="header-title">Level Up Dashboard!</h1>
+            <img src="https://raw.githubusercontent.com/lucide-react/lucide/main/icons/headset.svg" class="headset-icon" style="transform: scaleX(-1);">
+        </div>
+
+        <div class="board-frame">
+            <!-- Left Side: Tiers -->
+            <div class="flex flex-col justify-between">
+                <div class="flex flex-wrap justify-center gap-6">
+                    <div class="tier-circle">
+                        <span class="tier-label italic">Level 1: The Rookie</span>
+                        <i class="fas fa-shield-alt tier-icon text-yellow-600"></i>
+                        <span class="text-[8px] uppercase font-bold text-slate-400">Leads</span>
+                        <span class="tier-leads">1-3</span>
+                    </div>
+                    <div class="tier-circle">
+                        <span class="tier-label italic">Level 2: The Pro</span>
+                        <i class="fas fa-crosshairs tier-icon text-blue-500"></i>
+                        <span class="text-[8px] uppercase font-bold text-slate-400">Leads</span>
+                        <span class="tier-leads">4-6</span>
+                    </div>
+                    <div class="tier-circle">
+                        <span class="tier-label italic">Level 3: The Elite</span>
+                        <i class="fas fa-fire tier-icon text-orange-500"></i>
+                        <span class="text-[8px] uppercase font-bold text-slate-400">Leads</span>
+                        <span class="tier-leads">7-10</span>
+                    </div>
+                    <div class="tier-circle mt-4 border-yellow-500">
+                        <span class="tier-label italic !color-yellow-500">Level 4: The Master</span>
+                        <i class="fas fa-crown tier-icon text-yellow-500"></i>
+                        <span class="text-[8px] uppercase font-bold text-slate-400">Leads</span>
+                        <span class="tier-leads">11-15</span>
+                    </div>
+                    <div class="tier-circle mt-4 border-white">
+                        <span class="tier-label italic !color-white">Level 5: The Conqueror</span>
+                        <i class="fas fa-bolt tier-icon text-white"></i>
+                        <span class="text-[8px] uppercase font-bold text-slate-400">Leads</span>
+                        <span class="tier-leads">20+</span>
+                    </div>
+                </div>
+
+                <div class="quote">
+                    "Opportunities don't happen. You create them."<br>
+                    <span class="text-sm font-bold text-slate-500">— Chris Grosser</span>
+                </div>
+            </div>
+
+            <!-- Right Side: Rankings -->
+            <div id="rankings-list" class="flex flex-col gap-2">
+                <!-- Data from Google Sheets will load here -->
+                <div class="text-center py-20 text-slate-600 italic">Syncing with Ytel Data...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use a CORS proxy if direct fetch is blocked by the browser environment
+        const PROXY_URL = "https://corsproxy.io/?";
+        const RAW_API_URL = "https://script.google.com/macros/s/AKfycbx5d34ZOiPT5JbGWKU0XYW3k1rcmKS4lWPMVIE46TxO1S7qxrgIvv52CR2R3yYqsgqBEA/exec";
+        const SHEET_API_URL = PROXY_URL + encodeURIComponent(RAW_API_URL);
+
+        async function updateBoard() {
+            try {
+                // Initial attempt with proxy for better reliability in browser previews
+                const response = await fetch(SHEET_API_URL);
+                
+                if (!response.ok) throw new Error("Network response was not ok");
+                
+                const agents = await response.json();
+                
+                if (agents.error) {
+                    console.error("Sheet Error:", agents.error);
+                    showError(agents.error);
+                    return;
+                }
+
+                // Sort agents by lead count
+                agents.sort((a, b) => b.leads - a.leads);
+
+                const list = document.getElementById('rankings-list');
+                document.getElementById('connection-status').innerHTML = '<span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"></span> Live Sync Active';
+                document.getElementById('connection-status').classList.replace('text-red-500', 'text-green-500');
+
+                list.innerHTML = agents.slice(0, 10).map(agent => {
+                    const showBadge = agent.leads >= 1;
+                    let levelNum = 0;
+                    if (agent.leads >= 11) levelNum = 4;
+                    else if (agent.leads >= 7) levelNum = 3;
+                    else if (agent.leads >= 4) levelNum = 2;
+                    else if (agent.leads >= 1) levelNum = 1;
+
+                    return `
+                        <div class="agent-row">
+                            <span class="agent-name">${agent.name}</span>
+                            ${showBadge ? `
+                                <div class="completed-tag">
+                                    <div class="bg-red-700 rounded-full w-4 h-4 flex items-center justify-center text-[8px]">${levelNum}</div>
+                                    Completed
+                                </div>
+                            ` : '<div class="w-20"></div>'}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error("Sync error:", error);
+                showError("Sync Error: Failed to reach Google Script. Check if 'Anyone' has access.");
+            }
+        }
+
+        function showError(msg) {
+            const list = document.getElementById('rankings-list');
+            const status = document.getElementById('connection-status');
+            status.innerHTML = '<span class="inline-block w-2 h-2 bg-red-600 rounded-full mr-1"></span> Connection Blocked';
+            status.style.color = '#ef4444';
+            list.innerHTML = `<div class="text-center py-10 text-red-500 text-xs border border-red-900/30 rounded bg-red-950/10 px-4">${msg}</div>`;
+        }
+
+        updateBoard();
+        setInterval(updateBoard, 30000); 
+    </script>
+</body>
+</html>
