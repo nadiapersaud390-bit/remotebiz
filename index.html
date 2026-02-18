@@ -8,11 +8,13 @@
     <style>
         :root { --bg: #000; --cyan: #45f3ff; --card: #1c1f26; --text: #fff; }
         body { background: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        
         .container { width: 95%; max-width: 1100px; border: 1px solid #444; padding: 30px; margin-bottom: 40px; background: rgba(5, 5, 5, 0.9); }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 3.5rem; margin: 0; font-style: italic; }
-        .headset-icon { width: 100px; filter: drop-shadow(0 0 8px var(--cyan)); }
+        /* ADJUSTED HEADER: Icons are bigger and closer to text */
+        .header { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .header h1 { font-family: 'Dancing Script', cursive; color: var(--cyan); font-size: 4rem; margin: 0; font-style: italic; text-align: center; }
+        .headset-icon { width: 150px; height: auto; filter: drop-shadow(0 0 15px var(--cyan)); }
         
         .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
         .levels-flex { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
@@ -30,7 +32,6 @@
         .rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
         .col h2 { text-align: center; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; font-size: 1.5rem; }
         
-        /* THE LIVE QUOTE FROM A8:D9 */
         #live-quote { margin-top: 40px; font-style: italic; color: #aaa; border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 1.3rem; letter-spacing: 0.5px; }
     </style>
 </head>
@@ -77,14 +78,11 @@
                 const data = await res.text();
                 const rows = data.split('\n').map(r => r.split(','));
                 
-                // 1. UPDATE THE QUOTE (Looking at Row 8, Column A/Index 0)
-                // Row index is 7 because it starts at 0.
+                // Quote from cell A8
                 if (rows[7] && rows[7][0]) {
-                    const quoteText = rows[7][0].trim();
-                    document.getElementById('live-quote').innerText = `"${quoteText}"`;
+                    document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
                 }
 
-                // 2. UPDATE THE TABLES (Agent data in rows 2 through 7)
                 const agentRows = rows.slice(1, 7); 
                 let lvH = '', c2H = '', c5H = '', c8H = '';
 
@@ -119,7 +117,7 @@
                 document.getElementById('col-2pm').innerHTML = c2H;
                 document.getElementById('col-5pm').innerHTML = c5H;
                 document.getElementById('col-8pm').innerHTML = c8H;
-            } catch (e) { console.error("Sync failed:", e); }
+            } catch (e) { console.error(e); }
         }
 
         sync();
