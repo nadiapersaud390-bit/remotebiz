@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,700&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0b0e14; 
+            --bg: #000; 
             --cyan: #45f3ff; 
             --card: #1c1f26; 
             --text: #fff; 
@@ -19,7 +19,7 @@
             background: var(--bg); 
             color: var(--text); 
             font-family: 'Roboto', sans-serif; 
-            padding: 10px; 
+            padding: 20px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -29,107 +29,137 @@
         .container { 
             width: 95%; 
             max-width: 1100px; 
-            border: 1px solid #333; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            background: rgba(20, 20, 20, 0.95); 
-            border-radius: 12px;
+            border: 1px solid #444; 
+            padding: 30px; 
+            margin-bottom: 40px; 
+            background: rgba(5, 5, 5, 0.9); 
+            position: relative;
         }
         
         .header { 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            gap: 10px; 
+            gap: 15px; 
             margin-bottom: 30px; 
         }
         
+        /* Mobile responsive font for title */
         .header h1 { 
             font-family: 'Dancing Script', cursive; 
             color: var(--cyan); 
             font-size: clamp(2rem, 8vw, 4rem); 
             margin: 0; 
+            font-style: italic; 
             text-align: center; 
         }
         
+        /* Mobile responsive icons */
         .headset-icon { 
-            width: clamp(40px, 10vw, 100px); 
-            filter: drop-shadow(0 0 10px var(--cyan)); 
+            width: clamp(50px, 12vw, 150px); 
+            height: auto; 
+            filter: drop-shadow(0 0 15px var(--cyan)); 
         }
         
-        /* Layout logic */
         .dash-layout { 
             display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
+            grid-template-columns: 1.1fr 0.9fr; 
+            gap: 40px; 
+            align-items: start; 
         }
 
-        .rank-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
-        }
-
-        /* Responsive Fixes */
+        /* --- MOBILE DESIGN CHANGES --- */
         @media (max-width: 850px) {
             .dash-layout, .rank-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
-            .header { flex-wrap: wrap; }
-            .circle { width: 130px; height: 130px; }
+            .header {
+                flex-direction: row;
+                gap: 5px;
+            }
+            .container {
+                padding: 15px;
+            }
+            .circle {
+                width: 135px !important;
+                height: 135px !important;
+            }
         }
+        /* ---------------------------- */
 
         .levels-flex { 
             display: flex; 
             flex-wrap: wrap; 
-            gap: 15px; 
+            gap: 20px; 
             justify-content: center; 
+            max-width: 520px; 
+            margin: 0 auto; 
         }
         
         .circle { 
-            border: 3px solid var(--cyan); 
+            border: 4px solid var(--cyan); 
             border-radius: 50%; 
-            width: 140px; 
-            height: 140px; 
+            width: 150px; 
+            height: 150px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             background-color: #fff; 
             position: relative; 
-            box-shadow: 0 0 15px rgba(69,243,255,0.3); 
+            box-shadow: 0 0 15px rgba(69,243,255,0.6); 
             overflow: hidden; 
         }
 
         .circle::before { 
             content: ""; 
             position: absolute; 
-            top: 0; height: 40px; width: 100%;
+            top: 0; left: 0; right: 0; 
+            height: 48px; 
             background: #222; 
             z-index: 1; 
         }
 
         .level-title-box { 
-            position: absolute; top: 5px; z-index: 2; 
-            color: #fff; text-align: center; width: 100%; 
+            position: absolute; 
+            top: 10px; 
+            z-index: 2; 
+            color: #fff; 
+            text-align: center; 
+            line-height: 1.2; 
+            width: 100%; 
         }
         
-        .lvl-num { font-size: 9px; font-weight: bold; display: block;}
-        .lvl-name { font-size: 10px; font-weight: 900; display: block;}
+        .level-title-box .lvl-num { display: block; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .level-title-box .lvl-name { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; }
 
         .icon-container { 
-            width: 40px; height: 40px; 
-            background-size: contain; background-repeat: no-repeat; background-position: center; 
-            z-index: 2; margin-top: 45px; 
+            width: 50px; 
+            height: 50px; 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            z-index: 2; 
+            margin-top: 55px; 
         }
         
-        .leads-label { color: #333; font-weight: bold; font-size: 0.7rem; z-index: 2; }
+        .leads-label { 
+            color: #333; 
+            font-weight: bold; 
+            font-size: 0.75rem; 
+            z-index: 2; 
+            margin-top: -2px; 
+        }
         
         .circle strong { 
-            font-size: 1.2rem; color: var(--cyan); z-index: 2; 
+            font-size: 1.3rem; 
+            color: var(--cyan); 
+            z-index: 2; 
+            padding-bottom: 12px; 
             text-shadow: 1px 1px 1px #000; 
         }
         
-        .lvl-5 { border-color: var(--gold); }
+        .lvl-5 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        .lvl-5 strong { color: #b8860b; }
 
         .lvl-1 .icon-container { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
         .lvl-2 .icon-container { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
@@ -137,33 +167,63 @@
         .lvl-4 .icon-container { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
         .lvl-5 .icon-container { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
 
-        .list { display: flex; flex-direction: column; gap: 8px; }
+        .list { display: flex; flex-direction: column; gap: 12px; }
         .item { 
             background: var(--card); 
-            padding: 12px; 
-            border-radius: 8px; 
+            padding: 15px 20px; 
+            border-radius: 6px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border: 1px solid #333; 
+            min-height: 50px; 
+            border-bottom: 1px solid #333; 
         }
         
         .badge-box { 
-            display: flex; align-items: center; gap: 5px; 
-            background: rgba(255, 140, 0, 0.1); 
-            padding: 4px 8px; border-radius: 4px; border: 1px solid var(--orange); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: rgba(255, 140, 0, 0.15); 
+            padding: 6px 14px; 
+            border-radius: 5px; 
+            border: 1px solid var(--orange); 
         }
         
-        .level-icon { width: 20px; height: 20px; }
-        .badge-text { font-size: 0.7rem; color: var(--orange); font-weight: bold; }
-        .score { color: var(--cyan); font-weight: bold; font-size: 1.4rem; }
+        .level-icon { width: 32px; height: 32px; object-fit: contain; }
+        .badge-text { font-weight: bold; font-size: 0.9rem; color: var(--orange); text-transform: uppercase; }
         
-        #live-quote { margin-top: 20px; font-style: italic; color: #888; text-align: center; }
+        .score { color: var(--cyan); font-weight: bold; font-size: 1.8rem; text-shadow: 0 0 10px var(--cyan); }
+        .rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+        .col h2 { text-align: center; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; font-size: 1.5rem; color: var(--cyan); }
+        
+        #live-quote { margin-top: 40px; font-style: italic; color: #aaa; border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 1.4rem; }
 
-        .refresh-btn {
-            background: var(--cyan); color: #000; border: none; padding: 12px 30px;
-            font-weight: bold; cursor: pointer; border-radius: 50px;
+        .footer-container { 
+            margin-top: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+            padding-bottom: 40px;
         }
+        
+        .refresh-btn {
+            background: var(--cyan);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .refresh-btn:hover { background: #fff; box-shadow: 0 0 15px var(--cyan); }
+        .refresh-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+
+        .footer-info { color: #555; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -171,84 +231,155 @@
     <div class="container">
         <div class="header">
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
-            <h1>Performance</h1>
+            <h1>Level Up Dashboard!</h1>
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
         </div>
         <div class="dash-layout">
             <div class="levels-flex">
-                <div class="circle lvl-1"><div class="level-title-box"><span class="lvl-num">Lvl 1</span><span class="lvl-name">Rookie</span></div><div class="icon-container"></div><span class="leads-label">Leads</span><strong>1-3</strong></div>
-                <div class="circle lvl-2"><div class="level-title-box"><span class="lvl-num">Lvl 2</span><span class="lvl-name">Pro</span></div><div class="icon-container"></div><span class="leads-label">Leads</span><strong>4-6</strong></div>
-                <div class="circle lvl-3"><div class="level-title-box"><span class="lvl-num">Lvl 3</span><span class="lvl-name">Elite</span></div><div class="icon-container"></div><span class="leads-label">Leads</span><strong>7-10</strong></div>
-                <div class="circle lvl-5"><div class="level-title-box"><span class="lvl-num">Lvl 5</span><span class="lvl-name">King</span></div><div class="icon-container"></div><span class="leads-label">Leads</span><strong>20+</strong></div>
+                <div class="circle lvl-1">
+                    <div class="level-title-box"><span class="lvl-num">Level 1:</span><span class="lvl-name">The Rookie</span></div>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
+                    <strong>1-3</strong>
+                </div>
+                <div class="circle lvl-2">
+                    <div class="level-title-box"><span class="lvl-num">Level 2:</span><span class="lvl-name">The Pro</span></div>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
+                    <strong>4-6</strong>
+                </div>
+                <div class="circle lvl-3">
+                    <div class="level-title-box"><span class="lvl-num">Level 3:</span><span class="lvl-name">The Elite</span></div>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
+                    <strong>7-10</strong>
+                </div>
+                <div class="circle lvl-4">
+                    <div class="level-title-box"><span class="lvl-num">Level 4:</span><span class="lvl-name">The Master</span></div>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
+                    <strong>11-15</strong>
+                </div>
+                <div class="circle lvl-5">
+                    <div class="level-title-box"><span class="lvl-num">Level 5:</span><span class="lvl-name">The Conqueror</span></div>
+                    <div class="icon-container"></div>
+                    <span class="leads-label">Leads</span>
+                    <strong>20+</strong>
+                </div>
             </div>
             <div class="list" id="level-list"></div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="rank-grid">
-            <div class="col"><h3 style="color:var(--cyan)">2PM</h3><div class="list" id="col-2pm"></div></div>
-            <div class="col"><h3 style="color:var(--cyan)">5PM</h3><div class="list" id="col-5pm"></div></div>
-            <div class="col"><h3 style="color:var(--cyan)">8PM</h3><div class="list" id="col-8pm"></div></div>
         </div>
         <div id="live-quote"></div>
     </div>
 
-    <button class="refresh-btn" onclick="sync()">Refresh Data</button>
-    <p id="last-sync" style="font-size: 0.7rem; color: #555; margin-top: 10px;"></p>
+    <div class="container">
+        <div class="header">
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
+            <h1 style="font-family: 'Playfair Display'; font-style: italic;">General Rank of Performance</h1>
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
+        </div>
+        <div class="rank-grid">
+            <div class="col"><h2>2PM Update</h2><div class="list" id="col-2pm"></div></div>
+            <div class="col"><h2>5PM Update</h2><div class="list" id="col-5pm"></div></div>
+            <div class="col"><h2>8PM Update</h2><div class="list" id="col-8pm"></div></div>
+        </div>
+    </div>
+
+    <div class="footer-container">
+        <button class="refresh-btn" id="refresh-btn" onclick="sync()">Manual Refresh</button>
+        <div class="footer-info" id="last-sync">Last Updated: Initializing...</div>
+    </div>
 
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
-        
-        // PASTE YOUR DISCORD WEBHOOK URL HERE
-        const webhookUrl = ''; 
+
+        // --- NOTIFICATION CONFIG ---
+        const webhookUrl = 'PASTE_YOUR_DISCORD_WEBHOOK_URL_HERE'; 
 
         async function notifyMe(action) {
-            if(!webhookUrl) return;
+            if(!webhookUrl || webhookUrl.includes('PASTE_YOUR')) return;
             try {
                 await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: `🚀 Dashboard ${action}! Time: ${new Date().toLocaleTimeString()}` })
+                    body: JSON.stringify({ 
+                        content: `🚀 **Dashboard Update**: Someone ${action} the link.\n⏰ **Time**: ${new Date().toLocaleString()}` 
+                    })
                 });
-            } catch(e) { console.log("Notify failed"); }
+            } catch (e) { console.error("Notification failed", e); }
         }
+        // ---------------------------
 
         async function sync() {
-            const btn = document.querySelector('.refresh-btn');
-            btn.innerText = "Syncing...";
-            
+            const btn = document.getElementById('refresh-btn');
+            btn.innerText = "Loading...";
+            btn.disabled = true;
+
             try {
                 const res = await fetch(`${sheetUrl}&ts=${new Date().getTime()}`);
                 const data = await res.text();
                 const rows = data.split('\n').map(r => r.split(','));
                 
-                // Process Agents
+                if (rows[7] && rows[7][0]) {
+                    document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
+                }
+
                 const agentRows = rows.slice(1, 7); 
-                let agents = agentRows.map(cols => ({
-                    name: cols[0]?.trim(),
-                    v2: parseInt(cols[1]) || 0,
-                    v5: parseInt(cols[2]) || 0,
-                    v8: parseInt(cols[3]) || 0,
-                    max: Math.max(parseInt(cols[1])||0, parseInt(cols[2])||0, parseInt(cols[3])||0)
-                })).filter(a => a.name);
+                let agents = agentRows.map(cols => {
+                    const v2 = parseInt(cols[1]) || 0;
+                    const v5 = parseInt(cols[2]) || 0;
+                    const v8 = parseInt(cols[3]) || 0;
 
-                // Update UI (Simplified for briefness)
-                let lvH = '';
-                agents.sort((a,b) => b.max - a.max).forEach(a => {
-                    lvH += `<div class="item"><span>${a.name}</span><div class="badge-box"><span class="badge-text">SCORE: ${a.max}</span></div></div>`;
+                    return { 
+                        name: cols[0]?.trim(), 
+                        v2, v5, v8, 
+                        max: Math.max(v2, v5, v8) 
+                    };
+                }).filter(a => a.name);
+
+                const sortedByLevel = [...agents].sort((a, b) => b.max - a.max);
+
+                let lvH = '', c2H = '', c5H = '', c8H = '';
+
+                sortedByLevel.forEach(a => {
+                    let badgeHtml = '';
+                    if(a.max >= 1) {
+                        let iconUrl = 'https://i.postimg.cc/pTPgJVNS/Shield.png';
+                        let lvName = 'LEVEL 1';
+                        if(a.max >= 4) { lvName = 'LEVEL 2'; iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; }
+                        if(a.max >= 7) { lvName = 'LEVEL 3'; iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; }
+                        if(a.max >= 11) { lvName = 'LEVEL 4'; iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; }
+                        if(a.max >= 20) { lvName = 'LEVEL 5'; iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; }
+                        badgeHtml = `<div class="badge-box"><img src="${iconUrl}" class="level-icon"><span class="badge-text">${lvName} Completed</span></div>`;
+                    }
+                    lvH += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span>${badgeHtml}</div>`;
                 });
-                document.getElementById('level-list').innerHTML = lvH;
 
-                document.getElementById('last-sync').innerText = "Updated: " + new Date().toLocaleTimeString();
-                notifyMe("Opened/Refreshed");
-            } catch (e) {
-                console.error(e);
+                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v2}</span></div>`);
+                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v5}</span></div>`);
+                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v8}</span></div>`);
+
+                document.getElementById('level-list').innerHTML = lvH;
+                document.getElementById('col-2pm').innerHTML = c2H;
+                document.getElementById('col-5pm').innerHTML = c5H;
+                document.getElementById('col-8pm').innerHTML = c8H;
+
+                const now = new Date();
+                document.getElementById('last-sync').innerText = `Last Updated: ${now.toLocaleTimeString()}`;
+
+                // TRIGGER NOTIFICATION
+                notifyMe("opened/refreshed");
+
+            } catch (e) { 
+                console.error("Sync Error:", e);
+                document.getElementById('last-sync').innerText = "Sync Failed. Check internet.";
             } finally {
-                btn.innerText = "Refresh Data";
+                btn.innerText = "Manual Refresh";
+                btn.disabled = false;
             }
         }
 
+        setInterval(sync, 10000);
         window.onload = sync;
     </script>
 </body>
