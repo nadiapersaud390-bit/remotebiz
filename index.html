@@ -66,7 +66,6 @@
             align-items: start; 
         }
 
-        /* Responsive Fix for Mobile */
         @media (max-width: 850px) {
             .dash-layout, .rank-grid {
                 grid-template-columns: 1fr !important;
@@ -237,25 +236,25 @@
                     <div class="level-title-box"><span class="lvl-num">Level 1:</span><span class="lvl-name">The Rookie</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>1-3</strong>
+                    <strong>3</strong>
                 </div>
                 <div class="circle lvl-2">
                     <div class="level-title-box"><span class="lvl-num">Level 2:</span><span class="lvl-name">The Pro</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>4-6</strong>
+                    <strong>6</strong>
                 </div>
                 <div class="circle lvl-3">
                     <div class="level-title-box"><span class="lvl-num">Level 3:</span><span class="lvl-name">The Elite</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>7-10</strong>
+                    <strong>10</strong>
                 </div>
                 <div class="circle lvl-4">
                     <div class="level-title-box"><span class="lvl-num">Level 4:</span><span class="lvl-name">The Master</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>11-15</strong>
+                    <strong>15</strong>
                 </div>
                 <div class="circle lvl-5">
                     <div class="level-title-box"><span class="lvl-num">Level 5:</span><span class="lvl-name">The Conqueror</span></div>
@@ -289,8 +288,6 @@
 
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
-
-        // --- NOTIFICATION CONFIG ---
         const webhookUrl = 'https://discord.com/api/webhooks/1473852566667526275/P9DnUhND7W1EA02CORbe0RhrgnMKhhqz_zrozOyyvk6QOEBI7SwWb1oMvwd2K0a2exzb'; 
 
         async function notifyMe(action) {
@@ -305,7 +302,6 @@
                 });
             } catch (e) { console.error("Notification failed", e); }
         }
-        // ---------------------------
 
         async function sync() {
             const btn = document.getElementById('refresh-btn');
@@ -340,13 +336,28 @@
 
                 sortedByLevel.forEach(a => {
                     let badgeHtml = '';
-                    if(a.max >= 1) {
+                    
+                    // Logic: Badge only appears when a level is FULLY completed
+                    if(a.max >= 3) {
                         let iconUrl = 'https://i.postimg.cc/pTPgJVNS/Shield.png';
                         let lvName = 'LEVEL 1';
-                        if(a.max >= 4) { lvName = 'LEVEL 2'; iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; }
-                        if(a.max >= 7) { lvName = 'LEVEL 3'; iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; }
-                        if(a.max >= 11) { lvName = 'LEVEL 4'; iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; }
-                        if(a.max >= 20) { lvName = 'LEVEL 5'; iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; }
+
+                        if(a.max >= 6) { 
+                            lvName = 'LEVEL 2'; 
+                            iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; 
+                        }
+                        if(a.max >= 10) { 
+                            lvName = 'LEVEL 3'; 
+                            iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; 
+                        }
+                        if(a.max >= 15) { 
+                            lvName = 'LEVEL 4'; 
+                            iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; 
+                        }
+                        if(a.max >= 20) { 
+                            lvName = 'LEVEL 5'; 
+                            iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; 
+                        }
                         badgeHtml = `<div class="badge-box"><img src="${iconUrl}" class="level-icon"><span class="badge-text">${lvName} Completed</span></div>`;
                     }
                     lvH += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span>${badgeHtml}</div>`;
@@ -364,7 +375,6 @@
                 const now = new Date();
                 document.getElementById('last-sync').innerText = `Last Updated: ${now.toLocaleTimeString()}`;
 
-                // TRIGGER NOTIFICATION
                 notifyMe("opened/refreshed");
 
             } catch (e) { 
@@ -376,7 +386,7 @@
             }
         }
 
-        setInterval(sync, 10000); // Auto-sync every 10 seconds
+        setInterval(sync, 10000); 
         window.onload = sync;
     </script>
 </body>
