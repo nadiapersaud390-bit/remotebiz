@@ -44,7 +44,6 @@
             margin-bottom: 30px; 
         }
         
-        /* Mobile responsive font for title */
         .header h1 { 
             font-family: 'Dancing Script', cursive; 
             color: var(--cyan); 
@@ -54,7 +53,6 @@
             text-align: center; 
         }
         
-        /* Mobile responsive icons */
         .headset-icon { 
             width: clamp(50px, 12vw, 150px); 
             height: auto; 
@@ -68,7 +66,7 @@
             align-items: start; 
         }
 
-        /* --- MOBILE DESIGN CHANGES --- */
+        /* Responsive Fix for Mobile */
         @media (max-width: 850px) {
             .dash-layout, .rank-grid {
                 grid-template-columns: 1fr !important;
@@ -85,7 +83,6 @@
                 height: 135px !important;
             }
         }
-        /* ---------------------------- */
 
         .levels-flex { 
             display: flex; 
@@ -294,16 +291,16 @@
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
 
         // --- NOTIFICATION CONFIG ---
-        const webhookUrl = 'PASTE_YOUR_DISCORD_WEBHOOK_URL_HERE'; 
+        const webhookUrl = 'https://discord.com/api/webhooks/1473852566667526275/P9DnUhND7W1EA02CORbe0RhrgnMKhhqz_zrozOyyvk6QOEBI7SwWb1oMvwd2K0a2exzb'; 
 
         async function notifyMe(action) {
-            if(!webhookUrl || webhookUrl.includes('PASTE_YOUR')) return;
+            if(!webhookUrl) return;
             try {
                 await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        content: `🚀 **Dashboard Update**: Someone ${action} the link.\n⏰ **Time**: ${new Date().toLocaleString()}` 
+                        content: `🚀 **Dashboard Alert**: Someone ${action} the page.\n⏰ **Time**: ${new Date().toLocaleString()}` 
                     })
                 });
             } catch (e) { console.error("Notification failed", e); }
@@ -379,7 +376,7 @@
             }
         }
 
-        setInterval(sync, 10000);
+        setInterval(sync, 10000); // Auto-sync every 10 seconds
         window.onload = sync;
     </script>
 </body>
