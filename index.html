@@ -9,341 +9,118 @@
         :root { 
             --bg: #000; 
             --cyan: #45f3ff; 
-            --card: #1c1f26; 
+            --card: #1c1f26;
+            --card2: #23262f;
             --text: #fff; 
             --orange: #ff8c00; 
             --gold: #ffd700;
         }
-        
+        * { box-sizing: border-box; }
         body { 
-            background: var(--bg); 
-            color: var(--text); 
+            background: var(--bg); color: var(--text); 
             font-family: 'Roboto', sans-serif; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            margin: 0; 
+            padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; 
         }
-        
         .container { 
-            width: 95%; 
-            max-width: 1100px; 
-            border: 1px solid #444; 
-            padding: 30px; 
-            margin-bottom: 40px; 
-            background: rgba(5, 5, 5, 0.9); 
-            position: relative;
+            width: 95%; max-width: 1100px; border: 1px solid #444; 
+            padding: 30px; margin-bottom: 40px; 
+            background: rgba(5,5,5,0.9); position: relative; border-radius: 6px;
         }
-        
-        .header { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-        }
-        
+        .header { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 10px; }
         .header h1 { 
-            font-family: 'Dancing Script', cursive; 
-            color: var(--cyan); 
-            font-size: clamp(2rem, 8vw, 4rem); 
-            margin: 0; 
-            font-style: italic; 
-            text-align: center; 
-            cursor: pointer;
-            user-select: none;
+            font-family: 'Dancing Script', cursive; color: var(--cyan); 
+            font-size: clamp(2rem, 8vw, 4rem); margin: 0; font-style: italic; 
+            text-align: center; cursor: pointer; user-select: none; transition: text-shadow 0.2s;
         }
-
-        .header h1:hover {
-            text-shadow: 0 0 20px var(--cyan);
-        }
-        
-        .headset-icon { 
-            width: clamp(50px, 12vw, 150px); 
-            height: auto; 
-            filter: drop-shadow(0 0 15px var(--cyan)); 
-        }
-        
-        .dash-layout { 
-            display: grid; 
-            grid-template-columns: 1.1fr 0.9fr; 
-            gap: 40px; 
-            align-items: start; 
-        }
-
-        @media (max-width: 850px) {
-            .dash-layout, .rank-grid {
-                grid-template-columns: 1fr !important;
-            }
-            .header {
-                flex-direction: row;
-                gap: 5px;
-            }
-            .container {
-                padding: 15px;
-            }
-            .circle {
-                width: 135px !important;
-                height: 135px !important;
-            }
-        }
-
-        .levels-flex { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 20px; 
-            justify-content: center; 
-            max-width: 520px; 
-            margin: 0 auto; 
-        }
-        
-        .circle { 
-            border: 4px solid var(--cyan); 
-            border-radius: 50%; 
-            width: 150px; 
-            height: 150px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            background-color: #fff; 
-            position: relative; 
-            box-shadow: 0 0 15px rgba(69,243,255,0.6); 
-            overflow: hidden; 
-        }
-
-        .circle::before { 
-            content: ""; 
-            position: absolute; 
-            top: 0; left: 0; right: 0; 
-            height: 48px; 
-            background: #222; 
-            z-index: 1; 
-        }
-
-        .level-title-box { 
-            position: absolute; 
-            top: 10px; 
-            z-index: 2; 
-            color: #fff; 
-            text-align: center; 
-            line-height: 1.2; 
-            width: 100%; 
-        }
-        
-        .level-title-box .lvl-num { display: block; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .level-title-box .lvl-name { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; }
-
-        .icon-container { 
-            width: 50px; 
-            height: 50px; 
-            background-size: contain; 
-            background-repeat: no-repeat; 
-            background-position: center; 
-            z-index: 2; 
-            margin-top: 55px; 
-        }
-        
-        .leads-label { 
-            color: #333; 
-            font-weight: bold; 
-            font-size: 0.75rem; 
-            z-index: 2; 
-            margin-top: -2px; 
-        }
-        
-        .circle strong { 
-            font-size: 1.3rem; 
-            color: var(--cyan); 
-            z-index: 2; 
-            padding-bottom: 12px; 
-            text-shadow: 1px 1px 1px #000; 
-        }
-        
-        .lvl-5 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
-        .lvl-5 strong { color: #b8860b; }
-
-        .lvl-1 .icon-container { background-image: url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
-        .lvl-2 .icon-container { background-image: url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
-        .lvl-3 .icon-container { background-image: url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
-        .lvl-4 .icon-container { background-image: url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
-        .lvl-5 .icon-container { background-image: url('https://i.postimg.cc/JnR957w2/Bird.png'); }
-
-        .list { display: flex; flex-direction: column; gap: 12px; }
-        .item { 
-            background: var(--card); 
-            padding: 15px 20px; 
-            border-radius: 6px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            min-height: 50px; 
-            border-bottom: 1px solid #333; 
-        }
-        
-        .badge-box { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            background: rgba(255, 140, 0, 0.15); 
-            padding: 6px 14px; 
-            border-radius: 5px; 
-            border: 1px solid var(--orange); 
-        }
-        
-        .level-icon { width: 32px; height: 32px; object-fit: contain; }
-        .badge-text { font-weight: bold; font-size: 0.9rem; color: var(--orange); text-transform: uppercase; }
-        
-        .score { color: var(--cyan); font-weight: bold; font-size: 1.8rem; text-shadow: 0 0 10px var(--cyan); }
-        .rank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
-        .col h2 { text-align: center; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; font-size: 1.5rem; color: var(--cyan); }
-        
-        #live-quote { margin-top: 40px; font-style: italic; color: #aaa; border-top: 1px solid #333; padding-top: 20px; text-align: center; font-size: 1.4rem; }
-
-        .footer-container { 
-            margin-top: 30px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 10px; 
-            padding-bottom: 40px;
-        }
-        
-        .refresh-btn {
-            background: var(--cyan);
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .refresh-btn:hover { background: #fff; box-shadow: 0 0 15px var(--cyan); }
-        .refresh-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
-
-        .footer-info { color: #555; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Upload Modal */
-        #upload-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-        }
-        #upload-modal.active { display: flex; }
-
-        .modal-box {
-            background: #111;
-            border: 2px solid var(--cyan);
-            border-radius: 10px;
-            padding: 40px;
-            max-width: 480px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(69,243,255,0.3);
-        }
-
-        .modal-box h2 {
-            font-family: 'Dancing Script', cursive;
-            color: var(--cyan);
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .modal-box p {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-        }
-
-        .drop-zone {
-            border: 2px dashed var(--cyan);
-            border-radius: 8px;
-            padding: 40px 20px;
-            color: #aaa;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 20px;
-        }
-        .drop-zone:hover, .drop-zone.dragover {
-            background: rgba(69,243,255,0.07);
-            color: var(--cyan);
-        }
-        .drop-zone input { display: none; }
-
-        .modal-close {
-            background: transparent;
-            border: 1px solid #444;
-            color: #aaa;
-            padding: 8px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            margin-top: 10px;
-        }
-        .modal-close:hover { border-color: #aaa; color: #fff; }
-
-        .upload-result {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--cyan);
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-        .upload-result.active { display: block; }
-
-        /* Click indicator on title */
-        .click-hint {
-            font-size: 0.65rem;
-            color: #333;
-            text-align: center;
-            margin-top: -25px;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
+        .header h1:hover { text-shadow: 0 0 20px var(--cyan); }
+        .headset-icon { width: clamp(50px, 12vw, 150px); height: auto; filter: drop-shadow(0 0 15px var(--cyan)); }
+        .click-hint { font-size: 0.65rem; color: #333; text-align: center; margin-bottom: 24px; letter-spacing: 4px; text-transform: uppercase; transition: color 0.2s; }
         .click-hint.lit { color: var(--cyan); }
 
-        .no-badge {
-            color: #555;
-            font-size: 0.8rem;
-            font-style: italic;
+        /* Layout */
+        .dash-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+        @media (max-width: 850px) {
+            .dash-layout, .rank-grid { grid-template-columns: 1fr !important; }
+            .container { padding: 15px; }
+            .circle { width: 130px !important; height: 130px !important; }
         }
 
-        .working-toward {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(69,243,255,0.07);
-            padding: 5px 12px;
-            border-radius: 5px;
-            border: 1px solid #333;
-            font-size: 0.8rem;
-            color: #aaa;
+        /* Level circles */
+        .levels-flex { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .circle { 
+            border: 4px solid var(--cyan); border-radius: 50%; width: 150px; height: 150px;
+            display: flex; flex-direction: column; align-items: center; background-color: #fff;
+            position: relative; box-shadow: 0 0 15px rgba(69,243,255,0.6); overflow: hidden;
         }
-        .working-toward span { color: var(--cyan); font-weight: bold; }
+        .circle::before { content:""; position:absolute; top:0; left:0; right:0; height:48px; background:#222; z-index:1; }
+        .level-title-box { position:absolute; top:10px; z-index:2; color:#fff; text-align:center; line-height:1.2; width:100%; }
+        .lvl-num { display:block; font-size:10px; font-weight:bold; text-transform:uppercase; }
+        .lvl-name { display:block; font-size:11px; font-weight:900; text-transform:uppercase; }
+        .icon-container { width:50px; height:50px; background-size:contain; background-repeat:no-repeat; background-position:center; z-index:2; margin-top:55px; }
+        .leads-label { color:#333; font-weight:bold; font-size:0.75rem; z-index:2; margin-top:-2px; }
+        .circle strong { font-size:1.3rem; color:var(--cyan); z-index:2; padding-bottom:12px; text-shadow:1px 1px 1px #000; }
+        .lvl-5 { border-color:var(--gold); box-shadow:0 0 15px rgba(255,215,0,0.6); }
+        .lvl-5 strong { color:#b8860b; }
+        .lvl-1 .icon-container { background-image:url('https://i.postimg.cc/pTPgJVNS/Shield.png'); }
+        .lvl-2 .icon-container { background-image:url('https://i.postimg.cc/rmqvNy6J/Sword.png'); }
+        .lvl-3 .icon-container { background-image:url('https://i.postimg.cc/XJnTkNMx/Flame.png'); }
+        .lvl-4 .icon-container { background-image:url('https://i.postimg.cc/JhNfXDFF/Crown.png'); }
+        .lvl-5 .icon-container { background-image:url('https://i.postimg.cc/JnR957w2/Bird.png'); }
+
+        /* Agent list — matching screenshot */
+        .agent-list { display:flex; flex-direction:column; gap:14px; }
+        .agent-item {
+            background: var(--card2); padding: 18px 20px; border-radius: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            min-height: 64px; border: 1px solid #2a2d35;
+        }
+        .agent-name { font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.3; }
+        .badge-box { 
+            display: flex; align-items: center; gap: 12px;
+            background: #2a1a00; padding: 10px 18px; border-radius: 8px;
+            border: 2px solid var(--orange); min-width: 195px; flex-shrink: 0;
+        }
+        .level-icon { width: 36px; height: 36px; object-fit: contain; }
+        .badge-text { 
+            font-weight: 900; font-size: 0.95rem; color: var(--orange);
+            text-transform: uppercase; line-height: 1.25; letter-spacing: 0.5px;
+        }
+
+        /* Rank columns */
+        .rank-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; width:100%; }
+        .col h2 { text-align:center; border-bottom:2px solid var(--cyan); padding-bottom:10px; font-size:1.5rem; color:var(--cyan); }
+        .list { display:flex; flex-direction:column; gap:12px; }
+        .item { background:var(--card); padding:15px 20px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; min-height:50px; border-bottom:1px solid #333; }
+        .score { color:var(--cyan); font-weight:bold; font-size:1.8rem; text-shadow:0 0 10px var(--cyan); }
+
+        /* Footer */
+        .footer-container { margin-top:10px; display:flex; flex-direction:column; align-items:center; gap:8px; padding-bottom:40px; }
+        .footer-info { color:#555; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+        .footer-info.live { color:var(--cyan); }
+
+        /* Modal */
+        #upload-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:999; justify-content:center; align-items:center; }
+        #upload-modal.active { display:flex; }
+        .modal-box { background:#111; border:2px solid var(--cyan); border-radius:12px; padding:40px; max-width:480px; width:90%; text-align:center; box-shadow:0 0 40px rgba(69,243,255,0.3); }
+        .modal-box h2 { font-family:'Dancing Script',cursive; color:var(--cyan); font-size:2rem; margin-bottom:8px; }
+        .modal-box p { color:#aaa; font-size:0.9rem; margin-bottom:25px; }
+        .drop-zone { border:2px dashed var(--cyan); border-radius:8px; padding:40px 20px; color:#aaa; font-size:0.95rem; cursor:pointer; transition:0.3s; margin-bottom:20px; }
+        .drop-zone:hover, .drop-zone.dragover { background:rgba(69,243,255,0.07); color:var(--cyan); }
+        .drop-zone input { display:none; }
+        .modal-close { background:transparent; border:1px solid #444; color:#aaa; padding:8px 20px; border-radius:4px; cursor:pointer; font-size:0.85rem; margin-top:10px; }
+        .modal-close:hover { border-color:#aaa; color:#fff; }
+        .upload-result { margin-top:20px; font-size:0.85rem; color:var(--cyan); text-align:left; max-height:200px; overflow-y:auto; display:none; }
+        .upload-result.active { display:block; }
     </style>
 </head>
 <body>
 
-    <!-- Upload Modal -->
     <div id="upload-modal">
         <div class="modal-box">
             <h2>📂 Upload Xfer Report</h2>
-            <p>Drop your CSV file here. Only transfers ≥ 120 seconds will count as a qualified lead.</p>
+            <p>Drop your CSV here. Only transfers ≥ 120 seconds count as a qualified lead.</p>
             <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-input').click()">
-                <div>🗂️ Click or drag & drop your CSV here</div>
+                🗂️ Click or drag & drop CSV here
                 <input type="file" id="csv-input" accept=".csv">
             </div>
             <div class="upload-result" id="upload-result"></div>
@@ -354,8 +131,8 @@
     <div class="container">
         <div class="header">
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
-            <h1 id="dashboard-title" title="Click 3 times to upload CSV">Level Up Dashboard!</h1>
-            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
+            <h1 id="dashboard-title">Level Up Dashboard!</h1>
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform:scaleX(-1)">
         </div>
         <div class="click-hint" id="click-hint">• • •</div>
         <div class="dash-layout">
@@ -363,44 +140,38 @@
                 <div class="circle lvl-1">
                     <div class="level-title-box"><span class="lvl-num">Level 1:</span><span class="lvl-name">The Rookie</span></div>
                     <div class="icon-container"></div>
-                    <span class="leads-label">Leads</span>
-                    <strong>1</strong>
+                    <span class="leads-label">Leads</span><strong>1</strong>
                 </div>
                 <div class="circle lvl-2">
                     <div class="level-title-box"><span class="lvl-num">Level 2:</span><span class="lvl-name">The Pro</span></div>
                     <div class="icon-container"></div>
-                    <span class="leads-label">Leads</span>
-                    <strong>3</strong>
+                    <span class="leads-label">Leads</span><strong>3</strong>
                 </div>
                 <div class="circle lvl-3">
                     <div class="level-title-box"><span class="lvl-num">Level 3:</span><span class="lvl-name">The Elite</span></div>
                     <div class="icon-container"></div>
-                    <span class="leads-label">Leads</span>
-                    <strong>5</strong>
+                    <span class="leads-label">Leads</span><strong>5</strong>
                 </div>
                 <div class="circle lvl-4">
                     <div class="level-title-box"><span class="lvl-num">Level 4:</span><span class="lvl-name">The Master</span></div>
                     <div class="icon-container"></div>
-                    <span class="leads-label">Leads</span>
-                    <strong>8</strong>
+                    <span class="leads-label">Leads</span><strong>8</strong>
                 </div>
                 <div class="circle lvl-5">
                     <div class="level-title-box"><span class="lvl-num">Level 5:</span><span class="lvl-name">The Conqueror</span></div>
                     <div class="icon-container"></div>
-                    <span class="leads-label">Leads</span>
-                    <strong>12</strong>
+                    <span class="leads-label">Leads</span><strong>12</strong>
                 </div>
             </div>
-            <div class="list" id="level-list"></div>
+            <div class="agent-list" id="level-list"></div>
         </div>
-        <div id="live-quote"></div>
     </div>
 
     <div class="container">
         <div class="header">
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
-            <h1 style="font-family: 'Playfair Display'; font-style: italic;">General Rank of Performance</h1>
-            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
+            <h1 style="font-family:'Playfair Display';font-style:italic;cursor:default">General Rank of Performance</h1>
+            <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform:scaleX(-1)">
         </div>
         <div class="rank-grid">
             <div class="col"><h2>2PM Update</h2><div class="list" id="col-2pm"></div></div>
@@ -410,12 +181,24 @@
     </div>
 
     <div class="footer-container">
-        <button class="refresh-btn" id="refresh-btn" onclick="sync()">Manual Refresh</button>
-        <div class="footer-info" id="last-sync">Last Updated: Initializing...</div>
+        <div class="footer-info" id="last-sync">Waiting for CSV upload...</div>
     </div>
 
     <script type="module">
-        // ── LEVEL CONFIG (Option A) ──────────────────────────────
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        const fbApp = initializeApp({
+            apiKey: "AIzaSyCHDO1tjkEWrRwHouvrDqzg3G9XYej8dLk",
+            authDomain: "remote-46474.firebaseapp.com",
+            databaseURL: "https://remote-46474-default-rtdb.firebaseio.com",
+            projectId: "remote-46474",
+            storageBucket: "remote-46474.firebasestorage.app",
+            messagingSenderId: "494100550717",
+            appId: "1:494100550717:web:c485dd4db30d8128d54654"
+        });
+        const db = getDatabase(fbApp);
+
         const LEVELS = [
             { num: 1, name: 'The Rookie',    leads: 1,  icon: 'https://i.postimg.cc/pTPgJVNS/Shield.png' },
             { num: 2, name: 'The Pro',       leads: 3,  icon: 'https://i.postimg.cc/rmqvNy6J/Sword.png'  },
@@ -424,346 +207,193 @@
             { num: 5, name: 'The Conqueror', leads: 12, icon: 'https://i.postimg.cc/JnR957w2/Bird.png'   },
         ];
 
-        // Known remote team agents (used for CSV matching)
         const REMOTE_AGENTS = [
-            'GTM Alice Hernandez',
-            'GTM May Umandal',
-            'GYP Chauncey Piere',
-            'GYP Hannah Baptiste',
-            'GYP Nathalia Charles',
-            'GYP Bibi Samuels',
-            'GYP Erika Samuels',
-            'GYP Nichola Mangar',
-            'GYP Nishon Gomes',
-            'GYP Rozanna Nizam',
+            'GTM Alice Hernandez','GTM May Umandal',
+            'GYP Chauncey Piere','GYP Hannah Baptiste','GYP Nathalia Charles',
+            'GYP Bibi Samuels','GYP Erika Samuels','GYP Nichola Mangar',
+            'GYP Nishon Gomes','GYP Rozanna Nizam',
         ];
 
-        function getLevelInfo(leads) {
-            let completed = null;
-            let next = LEVELS[0];
-            for (let i = 0; i < LEVELS.length; i++) {
-                if (leads >= LEVELS[i].leads) {
-                    completed = LEVELS[i];
-                    next = LEVELS[i + 1] || null;
-                } else {
-                    if (!completed) next = LEVELS[i];
-                    break;
-                }
-            }
-            return { completed, next };
+        function getCompletedLevel(leads) {
+            let done = null;
+            for (const lv of LEVELS) { if (leads >= lv.leads) done = lv; else break; }
+            return done;
         }
 
-        // ── TRIPLE CLICK TO OPEN UPLOAD ──────────────────────────
-        let clickCount = 0;
-        let clickTimer = null;
-        const hint = document.getElementById('click-hint');
+        // ── RENDER AGENT LEVEL LIST ──────────────────────────────
+        function renderAgentList(agentData) {
+            const leadsMap = {};
+            (agentData || []).forEach(a => { leadsMap[a.name] = a.leads || 0; });
 
+            const sorted = REMOTE_AGENTS
+                .map(name => ({ name, leads: leadsMap[name] || 0 }))
+                .sort((a, b) => b.leads - a.leads);
+
+            document.getElementById('level-list').innerHTML = sorted.map(a => {
+                const lv = getCompletedLevel(a.leads);
+                const badge = lv ? `
+                    <div class="badge-box">
+                        <img src="${lv.icon}" class="level-icon">
+                        <span class="badge-text">Level ${lv.num}<br>Completed</span>
+                    </div>` : '';
+                return `<div class="agent-item">
+                    <span class="agent-name">${a.name}</span>${badge}
+                </div>`;
+            }).join('');
+        }
+
+        // ── RENDER RANK COLUMNS ──────────────────────────────────
+        function renderRankCols(agentData) {
+            const sorted = REMOTE_AGENTS
+                .map(name => {
+                    const f = (agentData || []).find(a => a.name === name);
+                    return { name, leads: f ? f.leads : 0 };
+                })
+                .sort((a, b) => b.leads - a.leads);
+
+            const html = sorted.map(a =>
+                `<div class="item"><span>${a.name}</span><span class="score">${a.leads}</span></div>`
+            ).join('');
+
+            ['col-2pm','col-5pm','col-8pm'].forEach(id => {
+                document.getElementById(id).innerHTML = html;
+            });
+        }
+
+        // ── UPDATE FOOTER TIME ────────────────────────────────────
+        function setFooterTime(isoString) {
+            const t = new Date(isoString);
+            const footer = document.getElementById('last-sync');
+            footer.classList.add('live');
+            footer.innerText = `📤 Last CSV Upload: ${t.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} at ${t.toLocaleTimeString()}`;
+        }
+
+        // ── FIREBASE ─────────────────────────────────────────────
+        function saveToFirebase(results, uploadedAt) {
+            const agents = {};
+            results.forEach(a => {
+                agents[a.name.replace(/[\s.#$[\]]/g,'_')] = { name: a.name, leads: a.leads };
+            });
+            set(ref(db, 'csvResults'), { updatedAt: uploadedAt, agents })
+                .catch(err => console.error('Firebase error:', err));
+        }
+
+        function listenFirebase() {
+            onValue(ref(db, 'csvResults'), snap => {
+                const data = snap.val();
+                if (!data) return;
+                const agents = data.agents ? Object.values(data.agents) : [];
+                renderAgentList(agents);
+                renderRankCols(agents);
+                if (data.updatedAt) setFooterTime(data.updatedAt);
+            });
+        }
+
+        // ── TRIPLE CLICK ─────────────────────────────────────────
+        let clickCount = 0, clickTimer = null;
+        const hint = document.getElementById('click-hint');
         document.getElementById('dashboard-title').addEventListener('click', () => {
             clickCount++;
             hint.classList.add('lit');
             clearTimeout(clickTimer);
             if (clickCount >= 3) {
-                clickCount = 0;
-                hint.classList.remove('lit');
-                openModal();
+                clickCount = 0; hint.classList.remove('lit');
+                document.getElementById('upload-modal').classList.add('active');
             } else {
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                    hint.classList.remove('lit');
-                }, 1500);
+                clickTimer = setTimeout(() => { clickCount = 0; hint.classList.remove('lit'); }, 1500);
             }
         });
 
-        // ── MODAL ─────────────────────────────────────────────────
-        function openModal() {
-            document.getElementById('upload-modal').classList.add('active');
-        }
         function closeModal() {
             document.getElementById('upload-modal').classList.remove('active');
-            document.getElementById('upload-result').classList.remove('active');
-            document.getElementById('upload-result').innerHTML = '';
+            const r = document.getElementById('upload-result');
+            r.classList.remove('active'); r.innerHTML = '';
         }
+        window.closeModal = closeModal;
 
-        // Close modal on backdrop click
         document.getElementById('upload-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
-        // Drag & drop
-        const dropZone = document.getElementById('drop-zone');
-        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', e => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file) processCSV(file);
-        });
-        document.getElementById('csv-input').addEventListener('change', e => {
-            if (e.target.files[0]) processCSV(e.target.files[0]);
-        });
+        // ── DRAG & DROP ───────────────────────────────────────────
+        const dz = document.getElementById('drop-zone');
+        dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+        dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+        dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) processCSV(e.dataTransfer.files[0]); });
+        document.getElementById('csv-input').addEventListener('change', e => { if (e.target.files[0]) processCSV(e.target.files[0]); });
 
-        // ── CSV PROCESSING ─────────────────────────────────────────
+        // ── CSV PARSER ────────────────────────────────────────────
+        function parseCSVLine(line) {
+            const out = []; let cur = '', inQ = false;
+            for (const ch of line) {
+                if (ch === '"') inQ = !inQ;
+                else if (ch === ',' && !inQ) { out.push(cur.trim()); cur = ''; }
+                else cur += ch;
+            }
+            out.push(cur.trim());
+            return out;
+        }
+
         function processCSV(file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            reader.onload = e => {
+                const lines = e.target.result.split('\n').map(l => l.trim()).filter(Boolean);
 
-                // Find header row
-                let headerIdx = -1;
+                let hi = -1;
                 for (let i = 0; i < lines.length; i++) {
-                    if (lines[i].toLowerCase().includes('agent name') && lines[i].toLowerCase().includes('duration')) {
-                        headerIdx = i;
-                        break;
-                    }
+                    if (lines[i].toLowerCase().includes('agent name') && lines[i].toLowerCase().includes('duration')) { hi = i; break; }
                 }
-                if (headerIdx === -1) {
-                    showUploadResult('❌ Could not find header row. Make sure this is an Xfer report CSV.', []);
-                    return;
-                }
+                if (hi === -1) { showMsg('❌ Header row not found.', true); return; }
 
-                const headers = parseCSVLine(lines[headerIdx]).map(h => h.toLowerCase().trim());
-                const nameIdx = headers.findIndex(h => h.includes('agent name'));
-                const durIdx  = headers.findIndex(h => h.includes('duration'));
+                const hdrs = parseCSVLine(lines[hi]).map(h => h.toLowerCase().trim());
+                const ni = hdrs.findIndex(h => h.includes('agent name'));
+                const di = hdrs.findIndex(h => h.includes('duration'));
+                if (ni === -1 || di === -1) { showMsg('❌ Missing Agent Name or Duration column.', true); return; }
 
-                if (nameIdx === -1 || durIdx === -1) {
-                    showUploadResult('❌ Missing required columns (Agent Name, Duration).', []);
-                    return;
-                }
-
-                // Count qualified leads per agent (duration >= 120)
                 const counts = {};
-                for (let i = headerIdx + 1; i < lines.length; i++) {
+                for (let i = hi + 1; i < lines.length; i++) {
                     const cols = parseCSVLine(lines[i]);
-                    if (cols.length <= Math.max(nameIdx, durIdx)) continue;
-                    const name = cols[nameIdx]?.trim();
-                    const dur  = parseInt(cols[durIdx]) || 0;
-                    if (!name) continue;
-                    if (dur >= 120) {
-                        counts[name] = (counts[name] || 0) + 1;
-                    }
+                    const name = cols[ni]?.trim();
+                    const dur  = parseInt(cols[di]) || 0;
+                    if (!name || dur < 120) continue;
+                    counts[name] = (counts[name] || 0) + 1;
                 }
 
-                // Match against known remote agents
                 const results = REMOTE_AGENTS.map(agentName => {
-                    // Try exact match first, then partial
                     let leads = counts[agentName] || 0;
                     if (!leads) {
-                        // Try matching by last name / partial
-                        const nameParts = agentName.split(' ');
-                        const lastName = nameParts[nameParts.length - 1].toLowerCase();
-                        for (const [csvName, cnt] of Object.entries(counts)) {
-                            if (csvName.toLowerCase().includes(lastName)) {
-                                leads = cnt;
-                                break;
-                            }
+                        const last = agentName.split(' ').pop().toLowerCase();
+                        for (const [k,v] of Object.entries(counts)) {
+                            if (k.toLowerCase().includes(last)) { leads = v; break; }
                         }
                     }
                     return { name: agentName, leads };
-                }); // keep ALL agents — even 0 leads
+                });
 
-                results.sort((a, b) => b.leads - a.leads);
                 const uploadedAt = new Date().toISOString();
-                renderCSVResults(results, uploadedAt);
-                showUploadResult(null, results);
-                saveToFirebase(results, uploadedAt); // 🔥 push to Firebase so everyone sees it live
+                renderAgentList(results);
+                renderRankCols(results);
+                setFooterTime(uploadedAt);
+                saveToFirebase(results, uploadedAt);
+
+                const hit = results.filter(a => a.leads > 0).sort((a,b) => b.leads - a.leads);
+                let msg = `<div style="color:var(--cyan);font-weight:bold;margin-bottom:8px">✅ Done! ${hit.length} agent(s) with qualified leads:</div>`;
+                hit.forEach(r => { msg += `<div style="padding:2px 0;color:#ccc">${r.name}: <strong style="color:var(--cyan)">${r.leads} lead${r.leads!==1?'s':''}</strong></div>`; });
+                showMsg(msg, false);
             };
             reader.readAsText(file);
         }
 
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') {
-                    inQuotes = !inQuotes;
-                } else if (line[i] === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += line[i];
-                }
-            }
-            result.push(current.trim());
-            return result;
-        }
-
-        function renderCSVResults(results, uploadedAt) {
-            // Always show all 10 agents, sorted by leads desc (ties keep original order)
-            const all = REMOTE_AGENTS.map(agentName => {
-                const found = results.find(r => r.name === agentName);
-                return { name: agentName, leads: found ? found.leads : 0 };
-            }).sort((a, b) => b.leads - a.leads);
-
-            let lvH = '';
-            all.forEach(a => {
-                const { completed, next } = getLevelInfo(a.leads);
-                let badgeHtml = '';
-                if (completed) {
-                    badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} Completed</span></div>`;
-                } else {
-                    // no badge — empty right side, matches screenshot
-                    badgeHtml = '';
-                }
-                lvH += `<div class="item"><span title="${a.leads} qualified leads">${a.name}</span>${badgeHtml}</div>`;
-            });
-
-            document.getElementById('level-list').innerHTML = lvH;
-
-            // Upload time at footer
-            const t = uploadedAt ? new Date(uploadedAt) : new Date();
-            document.getElementById('last-sync').innerText =
-                `📤 Last CSV Upload: ${t.toLocaleDateString()} ${t.toLocaleTimeString()}`;
-        }
-
-        function showUploadResult(error, results) {
+        function showMsg(html, isErr) {
             const el = document.getElementById('upload-result');
             el.classList.add('active');
-            if (error) {
-                el.innerHTML = `<div style="color:#ff4444">${error}</div>`;
-                return;
-            }
-            if (results.length === 0) {
-                el.innerHTML = `<div style="color:#ff8c00">⚠️ No matching remote agents found with 120s+ transfers.</div>`;
-                return;
-            }
-            let html = `<div style="color:var(--cyan); margin-bottom:8px; font-weight:bold">✅ Found ${results.length} agent(s) with qualified leads:</div>`;
-            results.forEach(r => {
-                const displayName = r.name.replace(/^(GYP|GTM|GYB|GUY)\s+/, '');
-                html += `<div style="padding:3px 0; color:#ccc">${displayName}: <strong style="color:var(--cyan)">${r.leads} lead${r.leads !== 1 ? 's' : ''}</strong></div>`;
-            });
-            el.innerHTML = html;
+            el.innerHTML = isErr ? `<div style="color:#ff4444">${html}</div>` : html;
         }
 
-        // ── FIREBASE SETUP ────────────────────────────────────────
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHDO1tjkEWrRwHouvrDqzg3G9XYej8dLk",
-            authDomain: "remote-46474.firebaseapp.com",
-            databaseURL: "https://remote-46474-default-rtdb.firebaseio.com",
-            projectId: "remote-46474",
-            storageBucket: "remote-46474.firebasestorage.app",
-            messagingSenderId: "494100550717",
-            appId: "1:494100550717:web:c485dd4db30d8128d54654",
-            measurementId: "G-P6H90RW6X9"
-        };
-
-        const fbApp = initializeApp(firebaseConfig);
-        const db    = getDatabase(fbApp);
-
-        // Save results to Firebase after CSV upload
-        function saveToFirebase(results, uploadedAt) {
-            const payload = {
-                updatedAt: uploadedAt || new Date().toISOString(),
-                agents: {}
-            };
-            results.forEach(a => {
-                const key = a.name.replace(/[.#$[\]]/g, '_');
-                payload.agents[key] = { name: a.name, leads: a.leads };
-            });
-            set(ref(db, 'csvResults'), payload)
-                .then(() => console.log('✅ Firebase saved'))
-                .catch(err => console.error('Firebase save error:', err));
-        }
-
-        // Listen for live updates — all viewers see changes instantly
-        function listenFirebase() {
-            onValue(ref(db, 'csvResults'), (snapshot) => {
-                const data = snapshot.val();
-                if (!data || !data.agents) return;
-                const results = Object.values(data.agents)
-                    .sort((a, b) => b.leads - a.leads);
-                renderCSVResults(results, data.updatedAt);
-            });
-        }
-
-        // ── SHEET SYNC (existing functionality) ──────────────────
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
-        const webhookUrl = 'https://discord.com/api/webhooks/1473852566667526275/P9DnUhND7W1EA02CORbe0RhrgnMKhhqz_zrozOyyvk6QOEBI7SwWb1oMvwd2K0a2exzb';
-
-        async function notifyMe(action) {
-            if(!webhookUrl) return;
-            try {
-                await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        content: `🚀 **Dashboard Alert**: Someone ${action} the page.\n⏰ **Time**: ${new Date().toLocaleString()}` 
-                    })
-                });
-            } catch (e) { console.error("Notification failed", e); }
-        }
-
-        async function sync() {
-            const btn = document.getElementById('refresh-btn');
-            btn.innerText = "Loading...";
-            btn.disabled = true;
-
-            try {
-                const res = await fetch(`${sheetUrl}&ts=${new Date().getTime()}`);
-                const data = await res.text();
-                const rows = data.split('\n').map(r => r.split(','));
-                
-                if (rows[7] && rows[7][0]) {
-                    document.getElementById('live-quote').innerText = `"${rows[7][0].trim()}"`;
-                }
-
-                const agentRows = rows.slice(1, 7); 
-                let agents = agentRows.map(cols => {
-                    const v2 = parseInt(cols[1]) || 0;
-                    const v5 = parseInt(cols[2]) || 0;
-                    const v8 = parseInt(cols[3]) || 0;
-                    return { 
-                        name: cols[0]?.trim(), 
-                        v2, v5, v8, 
-                        max: Math.max(v2, v5, v8) 
-                    };
-                }).filter(a => a.name);
-
-                const sortedByLevel = [...agents].sort((a, b) => b.max - a.max);
-
-                let lvH = '', c2H = '', c5H = '', c8H = '';
-
-                sortedByLevel.forEach(a => {
-                    const { completed, next } = getLevelInfo(a.max);
-                    let badgeHtml = '';
-                    if (completed) {
-                        badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} ✅</span></div>`;
-                    } else if (next) {
-                        const needed = next.leads - a.max;
-                        badgeHtml = `<div class="working-toward">🔄 <span>${needed} more</span> → Lvl ${next.num}</div>`;
-                    }
-                    lvH += `<div class="item"><span title="Max leads: ${a.max}">${a.name}</span>${badgeHtml}</div>`;
-                });
-
-                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span>${a.name}</span><span class="score">${a.v2}</span></div>`);
-                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span>${a.name}</span><span class="score">${a.v5}</span></div>`);
-                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span>${a.name}</span><span class="score">${a.v8}</span></div>`);
-
-                document.getElementById('level-list').innerHTML = lvH;
-                document.getElementById('col-2pm').innerHTML = c2H;
-                document.getElementById('col-5pm').innerHTML = c5H;
-                document.getElementById('col-8pm').innerHTML = c8H;
-
-                const now = new Date();
-                document.getElementById('last-sync').innerText = `Last Updated: ${now.toLocaleTimeString()}`;
-                notifyMe("opened/refreshed");
-
-            } catch (e) { 
-                console.error("Sync Error:", e);
-                document.getElementById('last-sync').innerText = "Sync Failed. Check internet.";
-            } finally {
-                btn.innerText = "Manual Refresh";
-                btn.disabled = false;
-            }
-        }
-
-        setInterval(sync, 10000); 
-        window.onload = () => { sync(); listenFirebase(); };
+        // Init — show all agents at 0, then Firebase fills in
+        renderAgentList([]);
+        renderRankCols([]);
+        listenFirebase();
     </script>
 </body>
 </html>
