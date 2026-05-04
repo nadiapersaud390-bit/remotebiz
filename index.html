@@ -51,6 +51,12 @@
             margin: 0; 
             font-style: italic; 
             text-align: center; 
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .header h1:hover {
+            text-shadow: 0 0 20px var(--cyan);
         }
         
         .headset-icon { 
@@ -220,47 +226,169 @@
         .refresh-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
 
         .footer-info { color: #555; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Upload Modal */
+        #upload-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        #upload-modal.active { display: flex; }
+
+        .modal-box {
+            background: #111;
+            border: 2px solid var(--cyan);
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(69,243,255,0.3);
+        }
+
+        .modal-box h2 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--cyan);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-box p {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--cyan);
+            border-radius: 8px;
+            padding: 40px 20px;
+            color: #aaa;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            background: rgba(69,243,255,0.07);
+            color: var(--cyan);
+        }
+        .drop-zone input { display: none; }
+
+        .modal-close {
+            background: transparent;
+            border: 1px solid #444;
+            color: #aaa;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        .modal-close:hover { border-color: #aaa; color: #fff; }
+
+        .upload-result {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .upload-result.active { display: block; }
+
+        /* Click indicator on title */
+        .click-hint {
+            font-size: 0.65rem;
+            color: #333;
+            text-align: center;
+            margin-top: -25px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .click-hint.lit { color: var(--cyan); }
+
+        .no-badge {
+            color: #555;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .working-toward {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(69,243,255,0.07);
+            padding: 5px 12px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        .working-toward span { color: var(--cyan); font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <!-- Upload Modal -->
+    <div id="upload-modal">
+        <div class="modal-box">
+            <h2>📂 Upload Xfer Report</h2>
+            <p>Drop your CSV file here. Only transfers ≥ 120 seconds will count as a qualified lead.</p>
+            <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-input').click()">
+                <div>🗂️ Click or drag & drop your CSV here</div>
+                <input type="file" id="csv-input" accept=".csv">
+            </div>
+            <div class="upload-result" id="upload-result"></div>
+            <button class="modal-close" onclick="closeModal()">✕ Close</button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon">
-            <h1>Level Up Dashboard!</h1>
+            <h1 id="dashboard-title" title="Click 3 times to upload CSV">Level Up Dashboard!</h1>
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform: scaleX(-1);">
         </div>
+        <div class="click-hint" id="click-hint">• • •</div>
         <div class="dash-layout">
             <div class="levels-flex">
                 <div class="circle lvl-1">
                     <div class="level-title-box"><span class="lvl-num">Level 1:</span><span class="lvl-name">The Rookie</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>3</strong>
+                    <strong>1</strong>
                 </div>
                 <div class="circle lvl-2">
                     <div class="level-title-box"><span class="lvl-num">Level 2:</span><span class="lvl-name">The Pro</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>6</strong>
+                    <strong>3</strong>
                 </div>
                 <div class="circle lvl-3">
                     <div class="level-title-box"><span class="lvl-num">Level 3:</span><span class="lvl-name">The Elite</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>10</strong>
+                    <strong>5</strong>
                 </div>
                 <div class="circle lvl-4">
                     <div class="level-title-box"><span class="lvl-num">Level 4:</span><span class="lvl-name">The Master</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>15</strong>
+                    <strong>8</strong>
                 </div>
                 <div class="circle lvl-5">
                     <div class="level-title-box"><span class="lvl-num">Level 5:</span><span class="lvl-name">The Conqueror</span></div>
                     <div class="icon-container"></div>
                     <span class="leads-label">Leads</span>
-                    <strong>20+</strong>
+                    <strong>12</strong>
                 </div>
             </div>
             <div class="list" id="level-list"></div>
@@ -286,9 +414,274 @@
         <div class="footer-info" id="last-sync">Last Updated: Initializing...</div>
     </div>
 
-    <script>
+    <script type="module">
+        // ── LEVEL CONFIG (Option A) ──────────────────────────────
+        const LEVELS = [
+            { num: 1, name: 'The Rookie',    leads: 1,  icon: 'https://i.postimg.cc/pTPgJVNS/Shield.png' },
+            { num: 2, name: 'The Pro',       leads: 3,  icon: 'https://i.postimg.cc/rmqvNy6J/Sword.png'  },
+            { num: 3, name: 'The Elite',     leads: 5,  icon: 'https://i.postimg.cc/XJnTkNMx/Flame.png'  },
+            { num: 4, name: 'The Master',    leads: 8,  icon: 'https://i.postimg.cc/JhNfXDFF/Crown.png'  },
+            { num: 5, name: 'The Conqueror', leads: 12, icon: 'https://i.postimg.cc/JnR957w2/Bird.png'   },
+        ];
+
+        // Known remote team agents (used for CSV matching)
+        const REMOTE_AGENTS = [
+            'GTM Alice Hernandez',
+            'GTM May Umandal',
+            'GYP Chauncey Piere',
+            'GYP Hannah Baptiste',
+            'GYP Nathalia Charles',
+            'GYP Bibi Samuels',
+            'GYP Erika Samuels',
+            'GYP Nichola Mangar',
+            'GYP Nishon Gomes',
+            'GYP Rozanna Nizam',
+        ];
+
+        function getLevelInfo(leads) {
+            let completed = null;
+            let next = LEVELS[0];
+            for (let i = 0; i < LEVELS.length; i++) {
+                if (leads >= LEVELS[i].leads) {
+                    completed = LEVELS[i];
+                    next = LEVELS[i + 1] || null;
+                } else {
+                    if (!completed) next = LEVELS[i];
+                    break;
+                }
+            }
+            return { completed, next };
+        }
+
+        // ── TRIPLE CLICK TO OPEN UPLOAD ──────────────────────────
+        let clickCount = 0;
+        let clickTimer = null;
+        const hint = document.getElementById('click-hint');
+
+        document.getElementById('dashboard-title').addEventListener('click', () => {
+            clickCount++;
+            hint.classList.add('lit');
+            clearTimeout(clickTimer);
+            if (clickCount >= 3) {
+                clickCount = 0;
+                hint.classList.remove('lit');
+                openModal();
+            } else {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                    hint.classList.remove('lit');
+                }, 1500);
+            }
+        });
+
+        // ── MODAL ─────────────────────────────────────────────────
+        function openModal() {
+            document.getElementById('upload-modal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('upload-modal').classList.remove('active');
+            document.getElementById('upload-result').classList.remove('active');
+            document.getElementById('upload-result').innerHTML = '';
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('upload-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Drag & drop
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) processCSV(file);
+        });
+        document.getElementById('csv-input').addEventListener('change', e => {
+            if (e.target.files[0]) processCSV(e.target.files[0]);
+        });
+
+        // ── CSV PROCESSING ─────────────────────────────────────────
+        function processCSV(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+
+                // Find header row
+                let headerIdx = -1;
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].toLowerCase().includes('agent name') && lines[i].toLowerCase().includes('duration')) {
+                        headerIdx = i;
+                        break;
+                    }
+                }
+                if (headerIdx === -1) {
+                    showUploadResult('❌ Could not find header row. Make sure this is an Xfer report CSV.', []);
+                    return;
+                }
+
+                const headers = parseCSVLine(lines[headerIdx]).map(h => h.toLowerCase().trim());
+                const nameIdx = headers.findIndex(h => h.includes('agent name'));
+                const durIdx  = headers.findIndex(h => h.includes('duration'));
+
+                if (nameIdx === -1 || durIdx === -1) {
+                    showUploadResult('❌ Missing required columns (Agent Name, Duration).', []);
+                    return;
+                }
+
+                // Count qualified leads per agent (duration >= 120)
+                const counts = {};
+                for (let i = headerIdx + 1; i < lines.length; i++) {
+                    const cols = parseCSVLine(lines[i]);
+                    if (cols.length <= Math.max(nameIdx, durIdx)) continue;
+                    const name = cols[nameIdx]?.trim();
+                    const dur  = parseInt(cols[durIdx]) || 0;
+                    if (!name) continue;
+                    if (dur >= 120) {
+                        counts[name] = (counts[name] || 0) + 1;
+                    }
+                }
+
+                // Match against known remote agents
+                const results = REMOTE_AGENTS.map(agentName => {
+                    // Try exact match first, then partial
+                    let leads = counts[agentName] || 0;
+                    if (!leads) {
+                        // Try matching by last name / partial
+                        const nameParts = agentName.split(' ');
+                        const lastName = nameParts[nameParts.length - 1].toLowerCase();
+                        for (const [csvName, cnt] of Object.entries(counts)) {
+                            if (csvName.toLowerCase().includes(lastName)) {
+                                leads = cnt;
+                                break;
+                            }
+                        }
+                    }
+                    return { name: agentName, leads };
+                }).filter(a => a.leads > 0);
+
+                results.sort((a, b) => b.leads - a.leads);
+                renderCSVResults(results);
+                showUploadResult(null, results);
+                saveToFirebase(results); // 🔥 push to Firebase so everyone sees it live
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                if (line[i] === '"') {
+                    inQuotes = !inQuotes;
+                } else if (line[i] === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += line[i];
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function renderCSVResults(results) {
+            let lvH = '';
+            results.forEach(a => {
+                const { completed, next } = getLevelInfo(a.leads);
+                let badgeHtml = '';
+                if (completed) {
+                    badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} ✅</span></div>`;
+                } else if (next) {
+                    const needed = next.leads - a.leads;
+                    badgeHtml = `<div class="working-toward">🔄 <span>${needed} more</span> → Lvl ${next.num}</div>`;
+                } else {
+                    badgeHtml = `<span class="no-badge">No qualified leads yet</span>`;
+                }
+                // Show short name (remove prefix like GYP/GTM)
+                const displayName = a.name.replace(/^(GYP|GTM|GYB|GUY)\s+/, '');
+                lvH += `<div class="item"><span title="${a.leads} qualified leads">${displayName}</span>${badgeHtml}</div>`;
+            });
+
+            if (!lvH) lvH = `<div class="item"><span style="color:#555">No matching agents found in file</span></div>`;
+            document.getElementById('level-list').innerHTML = lvH;
+            const now = new Date();
+            document.getElementById('last-sync').innerText = `Last Updated (CSV): ${now.toLocaleTimeString()}`;
+        }
+
+        function showUploadResult(error, results) {
+            const el = document.getElementById('upload-result');
+            el.classList.add('active');
+            if (error) {
+                el.innerHTML = `<div style="color:#ff4444">${error}</div>`;
+                return;
+            }
+            if (results.length === 0) {
+                el.innerHTML = `<div style="color:#ff8c00">⚠️ No matching remote agents found with 120s+ transfers.</div>`;
+                return;
+            }
+            let html = `<div style="color:var(--cyan); margin-bottom:8px; font-weight:bold">✅ Found ${results.length} agent(s) with qualified leads:</div>`;
+            results.forEach(r => {
+                const displayName = r.name.replace(/^(GYP|GTM|GYB|GUY)\s+/, '');
+                html += `<div style="padding:3px 0; color:#ccc">${displayName}: <strong style="color:var(--cyan)">${r.leads} lead${r.leads !== 1 ? 's' : ''}</strong></div>`;
+            });
+            el.innerHTML = html;
+        }
+
+        // ── FIREBASE SETUP ────────────────────────────────────────
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHDO1tjkEWrRwHouvrDqzg3G9XYej8dLk",
+            authDomain: "remote-46474.firebaseapp.com",
+            databaseURL: "https://remote-46474-default-rtdb.firebaseio.com",
+            projectId: "remote-46474",
+            storageBucket: "remote-46474.firebasestorage.app",
+            messagingSenderId: "494100550717",
+            appId: "1:494100550717:web:c485dd4db30d8128d54654",
+            measurementId: "G-P6H90RW6X9"
+        };
+
+        const fbApp = initializeApp(firebaseConfig);
+        const db    = getDatabase(fbApp);
+
+        // Save results to Firebase after CSV upload
+        function saveToFirebase(results) {
+            const payload = {
+                updatedAt: new Date().toISOString(),
+                agents: {}
+            };
+            results.forEach(a => {
+                const key = a.name.replace(/[.#$[\]]/g, '_');
+                payload.agents[key] = { name: a.name, leads: a.leads };
+            });
+            set(ref(db, 'csvResults'), payload)
+                .then(() => console.log('✅ Firebase saved'))
+                .catch(err => console.error('Firebase save error:', err));
+        }
+
+        // Listen for live updates — all viewers see changes instantly
+        function listenFirebase() {
+            onValue(ref(db, 'csvResults'), (snapshot) => {
+                const data = snapshot.val();
+                if (!data || !data.agents) return;
+                const results = Object.values(data.agents)
+                    .sort((a, b) => b.leads - a.leads);
+                renderCSVResults(results);
+                const t = new Date(data.updatedAt);
+                document.getElementById('last-sync').innerText =
+                    `🔥 Live (Firebase): ${t.toLocaleTimeString()} — uploaded by supervisor`;
+            });
+        }
+
+        // ── SHEET SYNC (existing functionality) ──────────────────
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx8VEF3FgnN0v4yP_DaAxbwGRArshNfAGdEh27tStmMtwiYwzK4ZAkTeclpt1aooM77Y7JCsLjptcQ/pub?gid=526432516&single=true&output=csv';
-        const webhookUrl = 'https://discord.com/api/webhooks/1473852566667526275/P9DnUhND7W1EA02CORbe0RhrgnMKhhqz_zrozOyyvk6QOEBI7SwWb1oMvwd2K0a2exzb'; 
+        const webhookUrl = 'https://discord.com/api/webhooks/1473852566667526275/P9DnUhND7W1EA02CORbe0RhrgnMKhhqz_zrozOyyvk6QOEBI7SwWb1oMvwd2K0a2exzb';
 
         async function notifyMe(action) {
             if(!webhookUrl) return;
@@ -322,7 +715,6 @@
                     const v2 = parseInt(cols[1]) || 0;
                     const v5 = parseInt(cols[2]) || 0;
                     const v8 = parseInt(cols[3]) || 0;
-
                     return { 
                         name: cols[0]?.trim(), 
                         v2, v5, v8, 
@@ -335,37 +727,20 @@
                 let lvH = '', c2H = '', c5H = '', c8H = '';
 
                 sortedByLevel.forEach(a => {
+                    const { completed, next } = getLevelInfo(a.max);
                     let badgeHtml = '';
-                    
-                    // Logic: Badge only appears when a level is FULLY completed
-                    if(a.max >= 3) {
-                        let iconUrl = 'https://i.postimg.cc/pTPgJVNS/Shield.png';
-                        let lvName = 'LEVEL 1';
-
-                        if(a.max >= 6) { 
-                            lvName = 'LEVEL 2'; 
-                            iconUrl = 'https://i.postimg.cc/rmqvNy6J/Sword.png'; 
-                        }
-                        if(a.max >= 10) { 
-                            lvName = 'LEVEL 3'; 
-                            iconUrl = 'https://i.postimg.cc/XJnTkNMx/Flame.png'; 
-                        }
-                        if(a.max >= 15) { 
-                            lvName = 'LEVEL 4'; 
-                            iconUrl = 'https://i.postimg.cc/JhNfXDFF/Crown.png'; 
-                        }
-                        if(a.max >= 20) { 
-                            lvName = 'LEVEL 5'; 
-                            iconUrl = 'https://i.postimg.cc/JnR957w2/Bird.png'; 
-                        }
-                        badgeHtml = `<div class="badge-box"><img src="${iconUrl}" class="level-icon"><span class="badge-text">${lvName} Completed</span></div>`;
+                    if (completed) {
+                        badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} ✅</span></div>`;
+                    } else if (next) {
+                        const needed = next.leads - a.max;
+                        badgeHtml = `<div class="working-toward">🔄 <span>${needed} more</span> → Lvl ${next.num}</div>`;
                     }
-                    lvH += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span>${badgeHtml}</div>`;
+                    lvH += `<div class="item"><span title="Max leads: ${a.max}">${a.name}</span>${badgeHtml}</div>`;
                 });
 
-                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v2}</span></div>`);
-                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v5}</span></div>`);
-                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span title="Total Leads (8PM): ${a.v8}">${a.name}</span><span class="score">${a.v8}</span></div>`);
+                [...agents].sort((a,b) => b.v2 - a.v2).forEach(a => c2H += `<div class="item"><span>${a.name}</span><span class="score">${a.v2}</span></div>`);
+                [...agents].sort((a,b) => b.v5 - a.v5).forEach(a => c5H += `<div class="item"><span>${a.name}</span><span class="score">${a.v5}</span></div>`);
+                [...agents].sort((a,b) => b.v8 - a.v8).forEach(a => c8H += `<div class="item"><span>${a.name}</span><span class="score">${a.v8}</span></div>`);
 
                 document.getElementById('level-list').innerHTML = lvH;
                 document.getElementById('col-2pm').innerHTML = c2H;
@@ -374,7 +749,6 @@
 
                 const now = new Date();
                 document.getElementById('last-sync').innerText = `Last Updated: ${now.toLocaleTimeString()}`;
-
                 notifyMe("opened/refreshed");
 
             } catch (e) { 
@@ -387,7 +761,7 @@
         }
 
         setInterval(sync, 10000); 
-        window.onload = sync;
+        window.onload = () => { sync(); listenFirebase(); };
     </script>
 </body>
 </html>
