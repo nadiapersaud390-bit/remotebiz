@@ -174,9 +174,9 @@
             <img src="https://i.postimg.cc/265BRmdB/Headset.png" class="headset-icon" style="transform:scaleX(-1)">
         </div>
         <div class="rank-grid">
-            <div class="col"><h2>2PM Update</h2><div class="list" id="col-2pm"></div></div>
-            <div class="col"><h2>5PM Update</h2><div class="list" id="col-5pm"></div></div>
-            <div class="col"><h2>8PM Update</h2><div class="list" id="col-8pm"></div></div>
+            <div class="col"><h2 id="lbl-1pm">1PM Update</h2><div class="list" id="col-1pm"></div></div>
+            <div class="col"><h2 id="lbl-4pm">4PM Update</h2><div class="list" id="col-4pm"></div></div>
+            <div class="col"><h2 id="lbl-7pm">7PM Update</h2><div class="list" id="col-7pm"></div></div>
         </div>
     </div>
 
@@ -186,7 +186,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
         const fbApp = initializeApp({
             apiKey: "AIzaSyCHDO1tjkEWrRwHouvrDqzg3G9XYej8dLk",
@@ -242,50 +242,87 @@
             }).join('');
         }
 
+        // ── GET CURRENT SLOT ─────────────────────────────────────
+        // Returns '1pm', '4pm', or '7pm' based on current hour
+        function getSlot() {
+            const h = new Date().getHours(); // 0-23
+            if (h < 13) return '1pm';        // before 1PM
+            if (h < 16) return '4pm';        // 1PM–3:59PM
+            return '7pm';                     // 4PM onwards
+        }
+
         // ── RENDER RANK COLUMNS ──────────────────────────────────
-        function renderRankCols(agentData) {
-            const sorted = REMOTE_AGENTS
-                .map(name => {
-                    const f = (agentData || []).find(a => a.name === name);
-                    return { name, leads: f ? f.leads : 0 };
-                })
-                .sort((a, b) => b.leads - a.leads);
+        function renderRankCols(slotData) {
+            // slotData = { '1pm': [...agents], '4pm': [...agents], '7pm': [...agents] }
+            ['1pm','4pm','7pm'].forEach(slot => {
+                const agents = slotData[slot] || [];
+                const sorted = REMOTE_AGENTS
+                    .map(name => {
+                        const f = agents.find(a => a.name === name);
+                        return { name, leads: f ? f.leads : 0 };
+                    })
+                    .sort((a, b) => b.leads - a.leads);
 
-            const html = sorted.map(a =>
-                `<div class="item"><span>${a.name}</span><span class="score">${a.leads}</span></div>`
-            ).join('');
-
-            ['col-2pm','col-5pm','col-8pm'].forEach(id => {
-                document.getElementById(id).innerHTML = html;
+                document.getElementById(`col-${slot}`).innerHTML = sorted.map(a =>
+                    `<div class="item"><span>${a.name}</span><span class="score">${a.leads}</span></div>`
+                ).join('');
             });
         }
 
         // ── UPDATE FOOTER TIME ────────────────────────────────────
-        function setFooterTime(isoString) {
+        function setFooterTime(isoString, slot) {
             const t = new Date(isoString);
+            const slotLabel = slot === '1pm' ? '1PM' : slot === '4pm' ? '4PM' : '7PM';
             const footer = document.getElementById('last-sync');
             footer.classList.add('live');
-            footer.innerText = `📤 Last CSV Upload: ${t.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} at ${t.toLocaleTimeString()}`;
+            footer.innerText = `📤 Last Upload: ${t.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} at ${t.toLocaleTimeString()} → ${slotLabel} slot`;
         }
 
         // ── FIREBASE ─────────────────────────────────────────────
-        function saveToFirebase(results, uploadedAt) {
+        function saveToFirebase(results, uploadedAt, slot) {
             const agents = {};
             results.forEach(a => {
                 agents[a.name.replace(/[\s.#$[\]]/g,'_')] = { name: a.name, leads: a.leads };
             });
-            set(ref(db, 'csvResults'), { updatedAt: uploadedAt, agents })
-                .catch(err => console.error('Firebase error:', err));
+            // Read existing data first so we don't wipe other slots
+            get(ref(db, 'csvResults')).then(snap => {
+                const existing = snap.val() || {};
+                const updated = {
+                    ...existing,
+                    [`slot_${slot}`]: { updatedAt: uploadedAt, agents },
+                    lastUpdatedAt: uploadedAt,
+                    lastSlot: slot,
+                };
+                set(ref(db, 'csvResults'), updated)
+                    .catch(err => console.error('Firebase error:', err));
+            }).catch(err => console.error('Firebase read error:', err));
         }
 
         function listenFirebase() {
             onValue(ref(db, 'csvResults'), snap => {
                 const data = snap.val();
                 if (!data) return;
-                const agents = data.agents ? Object.values(data.agents) : [];
-                renderAgentList(agents);
-                renderRankCols(agents);
-                if (data.updatedAt) setFooterTime(data.updatedAt);
+
+                // Build slot data for rank columns
+                const slotData = {};
+                ['1pm','4pm','7pm'].forEach(slot => {
+                    const s = data[`slot_${slot}`];
+                    slotData[slot] = s ? Object.values(s.agents || {}) : [];
+                });
+
+                // Level list uses MAX leads across all slots per agent
+                const maxLeads = {};
+                Object.values(slotData).forEach(agents => {
+                    agents.forEach(a => {
+                        maxLeads[a.name] = Math.max(maxLeads[a.name] || 0, a.leads || 0);
+                    });
+                });
+                const levelAgents = REMOTE_AGENTS.map(name => ({ name, leads: maxLeads[name] || 0 }));
+
+                renderAgentList(levelAgents);
+                renderRankCols(slotData);
+
+                if (data.lastUpdatedAt) setFooterTime(data.lastUpdatedAt, data.lastSlot);
             });
         }
 
@@ -371,10 +408,18 @@
                 });
 
                 const uploadedAt = new Date().toISOString();
-                renderAgentList(results);
-                renderRankCols(results);
-                setFooterTime(uploadedAt);
-                saveToFirebase(results, uploadedAt);
+                const slot = getSlot();
+
+                // For level list, merge with existing Firebase data handled by listener
+                // For immediate local render, build slot data with just this slot
+                renderAgentList(results); // shows latest upload immediately
+                // Update just this slot's column immediately
+                const localSlotData = { '1pm': [], '4pm': [], '7pm': [] };
+                localSlotData[slot] = results;
+                renderRankCols(localSlotData);
+
+                setFooterTime(uploadedAt, slot);
+                saveToFirebase(results, uploadedAt, slot);
 
                 const hit = results.filter(a => a.leads > 0).sort((a,b) => b.leads - a.leads);
                 let msg = `<div style="color:var(--cyan);font-weight:bold;margin-bottom:8px">✅ Done! ${hit.length} agent(s) with qualified leads:</div>`;
@@ -392,7 +437,7 @@
 
         // Init — show all agents at 0, then Firebase fills in
         renderAgentList([]);
-        renderRankCols([]);
+        renderRankCols({ '1pm': [], '4pm': [], '7pm': [] });
         listenFirebase();
     </script>
 </body>
