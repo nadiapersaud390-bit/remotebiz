@@ -561,12 +561,13 @@
                         }
                     }
                     return { name: agentName, leads };
-                }).filter(a => a.leads > 0);
+                }); // keep ALL agents — even 0 leads
 
                 results.sort((a, b) => b.leads - a.leads);
-                renderCSVResults(results);
+                const uploadedAt = new Date().toISOString();
+                renderCSVResults(results, uploadedAt);
                 showUploadResult(null, results);
-                saveToFirebase(results); // 🔥 push to Firebase so everyone sees it live
+                saveToFirebase(results, uploadedAt); // 🔥 push to Firebase so everyone sees it live
             };
             reader.readAsText(file);
         }
@@ -589,28 +590,32 @@
             return result;
         }
 
-        function renderCSVResults(results) {
+        function renderCSVResults(results, uploadedAt) {
+            // Always show all 10 agents, sorted by leads desc (ties keep original order)
+            const all = REMOTE_AGENTS.map(agentName => {
+                const found = results.find(r => r.name === agentName);
+                return { name: agentName, leads: found ? found.leads : 0 };
+            }).sort((a, b) => b.leads - a.leads);
+
             let lvH = '';
-            results.forEach(a => {
+            all.forEach(a => {
                 const { completed, next } = getLevelInfo(a.leads);
                 let badgeHtml = '';
                 if (completed) {
-                    badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} ✅</span></div>`;
-                } else if (next) {
-                    const needed = next.leads - a.leads;
-                    badgeHtml = `<div class="working-toward">🔄 <span>${needed} more</span> → Lvl ${next.num}</div>`;
+                    badgeHtml = `<div class="badge-box"><img src="${completed.icon}" class="level-icon"><span class="badge-text">Level ${completed.num} Completed</span></div>`;
                 } else {
-                    badgeHtml = `<span class="no-badge">No qualified leads yet</span>`;
+                    // no badge — empty right side, matches screenshot
+                    badgeHtml = '';
                 }
-                // Show short name (remove prefix like GYP/GTM)
-                const displayName = a.name.replace(/^(GYP|GTM|GYB|GUY)\s+/, '');
-                lvH += `<div class="item"><span title="${a.leads} qualified leads">${displayName}</span>${badgeHtml}</div>`;
+                lvH += `<div class="item"><span title="${a.leads} qualified leads">${a.name}</span>${badgeHtml}</div>`;
             });
 
-            if (!lvH) lvH = `<div class="item"><span style="color:#555">No matching agents found in file</span></div>`;
             document.getElementById('level-list').innerHTML = lvH;
-            const now = new Date();
-            document.getElementById('last-sync').innerText = `Last Updated (CSV): ${now.toLocaleTimeString()}`;
+
+            // Upload time at footer
+            const t = uploadedAt ? new Date(uploadedAt) : new Date();
+            document.getElementById('last-sync').innerText =
+                `📤 Last CSV Upload: ${t.toLocaleDateString()} ${t.toLocaleTimeString()}`;
         }
 
         function showUploadResult(error, results) {
@@ -651,9 +656,9 @@
         const db    = getDatabase(fbApp);
 
         // Save results to Firebase after CSV upload
-        function saveToFirebase(results) {
+        function saveToFirebase(results, uploadedAt) {
             const payload = {
-                updatedAt: new Date().toISOString(),
+                updatedAt: uploadedAt || new Date().toISOString(),
                 agents: {}
             };
             results.forEach(a => {
@@ -672,10 +677,7 @@
                 if (!data || !data.agents) return;
                 const results = Object.values(data.agents)
                     .sort((a, b) => b.leads - a.leads);
-                renderCSVResults(results);
-                const t = new Date(data.updatedAt);
-                document.getElementById('last-sync').innerText =
-                    `🔥 Live (Firebase): ${t.toLocaleTimeString()} — uploaded by supervisor`;
+                renderCSVResults(results, data.updatedAt);
             });
         }
 
