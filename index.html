@@ -109,6 +109,10 @@
         .drop-zone input { display:none; }
         .modal-close { background:transparent; border:1px solid #444; color:#aaa; padding:8px 20px; border-radius:4px; cursor:pointer; font-size:0.85rem; margin-top:10px; }
         .modal-close:hover { border-color:#aaa; color:#fff; }
+        .modal-btn-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+        .btn-clear { background:transparent; border:2px solid #ff4444; color:#ff4444; padding:8px 20px; border-radius:4px; cursor:pointer; font-size:0.85rem; font-weight:700; transition:0.2s; }
+        .btn-clear:hover { background:#ff4444; color:#fff; }
+        .btn-clear:disabled { opacity:0.5; cursor:not-allowed; }
         .upload-result { margin-top:20px; font-size:0.85rem; color:var(--cyan); text-align:left; max-height:200px; overflow-y:auto; display:none; }
         .upload-result.active { display:block; }
     </style>
@@ -124,7 +128,10 @@
                 <input type="file" id="csv-input" accept=".csv">
             </div>
             <div class="upload-result" id="upload-result"></div>
-            <button class="modal-close" onclick="closeModal()">✕ Close</button>
+            <div class="modal-btn-row">
+                <button class="btn-clear" id="btn-clear-firebase" onclick="clearFirebase()">🗑️ Clear Board</button>
+                <button class="modal-close" onclick="closeModal()">✕ Close</button>
+            </div>
         </div>
     </div>
 
@@ -279,7 +286,7 @@
         }
 
         // ── FIREBASE ─────────────────────────────────────────────
-        function saveToFirebase(results, uploadedAt, slot) {
+        function saveToFirebase(results, uploadedAt, uploadDate, slot) {
             const agents = {};
             results.forEach(a => {
                 agents[a.name.replace(/[\s.#$[\]]/g,'_')] = { name: a.name, leads: a.leads };
@@ -292,6 +299,7 @@
                     [`slot_${slot}`]: { updatedAt: uploadedAt, agents },
                     lastUpdatedAt: uploadedAt,
                     lastSlot: slot,
+                    uploadDate: uploadDate,
                 };
                 set(ref(db, 'csvResults'), updated)
                     .catch(err => console.error('Firebase error:', err));
@@ -347,6 +355,25 @@
             r.classList.remove('active'); r.innerHTML = '';
         }
         window.closeModal = closeModal;
+        async function clearFirebase() {
+            const btn = document.getElementById('btn-clear-firebase');
+            if (!confirm('Clear all board data? This cannot be undone.')) return;
+            btn.disabled = true;
+            btn.textContent = 'Clearing...';
+            try {
+                await set(ref(db, 'csvResults'), null);
+                renderAgentList([]);
+                renderRankCols({ '1pm': [], '4pm': [], '7pm': [] });
+                document.getElementById('last-sync').classList.remove('live');
+                document.getElementById('last-sync').innerText = 'Waiting for CSV upload...';
+                showMsg('<div style="color:#44ff88">✅ Board cleared successfully.</div>', false);
+            } catch (err) {
+                showMsg('<div style="color:#ff4444">❌ Failed to clear: ' + err.message + '</div>', false);
+            }
+            btn.disabled = false;
+            btn.textContent = '🗑️ Clear Board';
+        }
+        window.clearFirebase = clearFirebase;
 
         document.getElementById('upload-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
@@ -408,6 +435,7 @@
                 });
 
                 const uploadedAt = new Date().toISOString();
+                const uploadDate = getTodayString();
                 const slot = getSlot();
 
                 // For level list, merge with existing Firebase data handled by listener
@@ -419,7 +447,7 @@
                 renderRankCols(localSlotData);
 
                 setFooterTime(uploadedAt, slot);
-                saveToFirebase(results, uploadedAt, slot);
+                saveToFirebase(results, uploadedAt, uploadDate, slot);
 
                 const hit = results.filter(a => a.leads > 0).sort((a,b) => b.leads - a.leads);
                 let msg = `<div style="color:var(--cyan);font-weight:bold;margin-bottom:8px">✅ Done! ${hit.length} agent(s) with qualified leads:</div>`;
@@ -451,14 +479,14 @@
                 const data = snap.val();
                 if (!data) return; // already empty, nothing to reset
 
-                const lastUpdated = data.lastUpdatedAt; // ISO string saved on each CSV upload
+                const lastUpdated = data.uploadDate || (data.lastUpdatedAt ? data.lastUpdatedAt.substring(0,10) : null); // local date string
                 if (!lastUpdated) {
                     // No timestamp stored — wipe to be safe
                     await set(ref(db, 'csvResults'), null);
                     return;
                 }
 
-                const dataDate = lastUpdated.substring(0, 10); // extract "YYYY-MM-DD"
+                const dataDate = lastUpdated; // already "YYYY-MM-DD"
                 if (dataDate !== today) {
                     // Data is from a previous day — wipe the board clean
                     await set(ref(db, 'csvResults'), null);
