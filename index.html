@@ -435,10 +435,35 @@
             el.innerHTML = isErr ? `<div style="color:#ff4444">${html}</div>` : html;
         }
 
-        // Init — show all agents at 0, then Firebase fills in
+        // ── DAILY AUTO-RESET ──────────────────────────────────────
+        // Wipes all slot data at the start of each new calendar day.
+        // Runs once on page load; if today's date differs from lastResetDate
+        // in Firebase, the data is cleared and lastResetDate is updated.
+        function getTodayString() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        async function checkAndResetIfNewDay() {
+            const today = getTodayString();
+            try {
+                const snap = await get(ref(db, 'lastResetDate'));
+                const stored = snap.val();
+                if (stored !== today) {
+                    // New day — wipe slot data and record today
+                    await set(ref(db, 'csvResults'), null);
+                    await set(ref(db, 'lastResetDate'), today);
+                    console.log(`[Dashboard] Daily reset triggered. Previous: ${stored} → Today: ${today}`);
+                }
+            } catch (err) {
+                console.error('Reset check error:', err);
+            }
+        }
+
+        // Init — show all agents at 0, check for daily reset, then Firebase fills in
         renderAgentList([]);
         renderRankCols({ '1pm': [], '4pm': [], '7pm': [] });
-        listenFirebase();
+        checkAndResetIfNewDay().then(() => listenFirebase());
     </script>
 </body>
 </html>
