@@ -436,9 +436,9 @@
         }
 
         // ── DAILY AUTO-RESET ──────────────────────────────────────
-        // Wipes all slot data at the start of each new calendar day.
-        // Runs once on page load; if today's date differs from lastResetDate
-        // in Firebase, the data is cleared and lastResetDate is updated.
+        // On every page load, checks if stored CSV data is from a previous
+        // calendar day by reading lastUpdatedAt inside csvResults itself.
+        // If data date != today → wipe so board starts fresh.
         function getTodayString() {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -447,13 +447,22 @@
         async function checkAndResetIfNewDay() {
             const today = getTodayString();
             try {
-                const snap = await get(ref(db, 'lastResetDate'));
-                const stored = snap.val();
-                if (stored !== today) {
-                    // New day — wipe slot data and record today
+                const snap = await get(ref(db, 'csvResults'));
+                const data = snap.val();
+                if (!data) return; // already empty, nothing to reset
+
+                const lastUpdated = data.lastUpdatedAt; // ISO string saved on each CSV upload
+                if (!lastUpdated) {
+                    // No timestamp stored — wipe to be safe
                     await set(ref(db, 'csvResults'), null);
-                    await set(ref(db, 'lastResetDate'), today);
-                    console.log(`[Dashboard] Daily reset triggered. Previous: ${stored} → Today: ${today}`);
+                    return;
+                }
+
+                const dataDate = lastUpdated.substring(0, 10); // extract "YYYY-MM-DD"
+                if (dataDate !== today) {
+                    // Data is from a previous day — wipe the board clean
+                    await set(ref(db, 'csvResults'), null);
+                    console.log(`[Dashboard] Daily reset: data was from ${dataDate}, today is ${today}`);
                 }
             } catch (err) {
                 console.error('Reset check error:', err);
